@@ -1,0 +1,42 @@
+{
+  "name": "tpo-admin",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview",
+    "lint": "run-p -l lint:*",
+    "lint:es": "eslint src/** --ext .ts,.tsx --no-error-on-unmatched-pattern",
+    "lint:prettier": "prettier --config .prettierrc.json --write '**/*.tsx'",
+    "commitmsg": "commitlint -e $GIT_PARAMS",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^14.1.0",
+    "@commitlint/config-conventional": "^14.1.0",
+    "@types/react": "^17.0.33",
+    "@types/react-dom": "^17.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.3.0",
+    "@typescript-eslint/parser": "^5.3.0",
+    "@vitejs/plugin-legacy": "^1.6.2",
+    "@vitejs/plugin-react": "^1.0.7",
+    "eslint": "^8.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^11.2.6",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.4.1",
+    "prettier-plugin-organize-imports": "^2.3.4",
+    "typescript": "^4.4.4",
+    "vite": "^2.6.13",
+    "vite-tsconfig-paths": "^3.3.17"
+  }
+}
