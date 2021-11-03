@@ -1,3 +1,4 @@
+import { useAuth } from 'lib/hooks'
 import React from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 
@@ -6,7 +7,7 @@ type RequireAuthProps = {
 }
 
 const RequireAuth: React.VFC<RequireAuthProps> = ({ children }) => {
-  const auth = true
+  const { auth } = useAuth()
   const location = useLocation()
 
   if (!auth) {
