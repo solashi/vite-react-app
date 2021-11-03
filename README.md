@@ -10,6 +10,10 @@ This project was bootstrapped with [Vite](https://vitejs.dev/).
 - [System](https://drive.google.com/drive/u/1/folders/1gfGyrwOXwyWLtO6aN5i9xHLjZekbaOuW)
 - [Schedule](https://docs.google.com/spreadsheets/d/1JoL_czaDi7ZagGN_xPW6_ceCwoAwRv37QCaecF4n1yw/edit#gid=787151627)
 - [JIRA](https://wur-inc.atlassian.net/jira/software/projects/TPO/boards/2)
+  
+**Requirement environment**
+- [Node LTS Version](https://nodejs.dev/download/)
+- [Yarn](https://yarnpkg.com/)
 
 ### Tech stack:
 
