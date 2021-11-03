@@ -1,6 +1,9 @@
 import { atom } from 'jotai'
-import { User } from 'lib/types'
+import { atomWithStorage } from 'jotai/utils'
+import { User, UserToken } from 'lib/types'
 
 const userAtom = atom<User | null>(null)
 
-export { userAtom }
+const tokenAtom = atomWithStorage<UserToken | null>('user-token', null)
+
+export { userAtom, tokenAtom }
