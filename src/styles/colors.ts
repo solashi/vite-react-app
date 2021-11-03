@@ -27,4 +27,8 @@ const blue = {
   100: '#d4e0ff'
 }
 
-export { grey, green, red, blue }
+const yellow = {
+  600: '#feecaa'
+}
+
+export { grey, green, red, blue, yellow }

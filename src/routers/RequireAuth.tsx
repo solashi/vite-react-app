@@ -6,7 +6,7 @@ type RequireAuthProps = {
 }
 
 const RequireAuth: React.VFC<RequireAuthProps> = ({ children }) => {
-  const auth = false
+  const auth = true
   const location = useLocation()
 
   if (!auth) {
