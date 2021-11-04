@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom'
 import { drawerWidth } from './Drawer'
 import Sidebar from './Sidebar'
 
-const DefaultLayout: React.VFC = () => {
+const Layout: React.VFC = () => {
   return (
     <Box sx={{ display: 'flex' }} bgcolor="secondary.main">
       <Sidebar />
@@ -33,4 +33,4 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   })
 }))
 
-export { DefaultLayout }
+export { Layout }

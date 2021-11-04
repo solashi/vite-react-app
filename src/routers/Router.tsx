@@ -1,4 +1,4 @@
-import { DefaultLayout } from 'components/Layouts'
+import { Layout } from 'components/Layouts'
 import { Route, Routes } from 'react-router-dom'
 import { Login } from 'screens/auth'
 import { Dashboard } from 'screens/dashboard'
@@ -13,7 +13,7 @@ const Router: React.VFC = () => {
         path="/"
         element={
           <RequireAuth>
-            <DefaultLayout />
+            <Layout />
           </RequireAuth>
         }
       >

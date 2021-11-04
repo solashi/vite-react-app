@@ -1,6 +1,10 @@
 import { request } from 'lib/request'
-import { UserLoginArgs, UserLoginRes } from 'lib/types'
+import { User, UserLoginArgs, UserLoginRes } from 'lib/types'
 
 const loginApi = (args: UserLoginArgs) => request.post<UserLoginRes>('user/auth', args)
 
-export { loginApi }
+const logoutApi = () => request.post('user/auth/logout')
+
+const userApi = () => request.get<User>('user')
+
+export { loginApi, logoutApi, userApi }

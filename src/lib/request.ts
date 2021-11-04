@@ -1,4 +1,4 @@
-import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import Axios, { AxiosRequestConfig } from 'axios'
 
 const baseURL = import.meta.env.VITE_API_URL as string
 
@@ -13,7 +13,7 @@ function authRequestInterceptor(config: AxiosRequestConfig) {
   return config
 }
 
-export const request: AxiosInstance = Axios.create({
+export const request = Axios.create({
   baseURL
 })
 
