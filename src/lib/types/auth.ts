@@ -5,6 +5,10 @@ type UserLoginArgs = {
   password: string
 }
 
+type UserLoginError = {
+  message: string
+}
+
 type UserToken = {
   access_token: string
   refresh_token: string
@@ -15,4 +19,4 @@ type UserLoginRes = {
   user: User
 } & UserToken
 
-export type { UserLoginArgs, UserLoginRes, UserToken }
+export type { UserLoginArgs, UserLoginRes, UserToken, UserLoginError }

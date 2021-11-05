@@ -9,7 +9,7 @@ const defaultFn = async ({ queryKey }: { queryKey: QueryKey }) => {
     params,
     ...(options as AxiosRequestConfig)
   })
-  return res
+  return res.data
 }
 
 const queryConfig: DefaultOptions = {

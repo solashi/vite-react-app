@@ -1,14 +1,16 @@
 import { useAtom } from 'jotai'
-import { useAtomCallback, useUpdateAtom } from 'jotai/utils'
+import { useAtomCallback, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { loginApi, logoutApi, userApi } from 'lib/api/auth'
-import { tokenAtom, userAtom } from 'lib/atomic'
+import { fetchAuthAtom, loadAuthAtom, tokenAtom, userAtom } from 'lib/atomic'
 import { UserLoginArgs } from 'lib/types'
 import { useCallback } from 'react'
 
 const useAuth = () => {
-  const [user, setUser] = useAtom(userAtom)
+  const [user] = useAtom(userAtom)
+  const loading = useAtomValue(loadAuthAtom)
   const setToken = useUpdateAtom(tokenAtom)
-  const updateUser = useUpdateAtom(userAtom)
+  const setUser = useUpdateAtom(userAtom)
+  const setFetching = useUpdateAtom(fetchAuthAtom)
 
   const auth = !!user
 
@@ -26,21 +28,25 @@ const useAuth = () => {
   }
 
   const getUser = useAtomCallback(
-    useCallback(async (get) => {
-      try {
-        const token = get(tokenAtom)
-
-        if (token?.access_token) {
-          const res = await userApi()
-          updateUser(res.data)
+    useCallback(
+      async (get) => {
+        try {
+          const token = get(tokenAtom)
+          if (token?.access_token) {
+            const res = await userApi()
+            setUser(res.data)
+          }
+          setFetching(false)
+        } catch (error) {
+          setFetching(false)
+          setUser(null)
         }
-      } catch (error) {
-        updateUser(null)
-      }
-    }, [])
+      },
+      [setFetching, setUser]
+    )
   )
 
-  return { auth, user, logout, login, getUser }
+  return { auth, user, logout, login, getUser, loading }
 }
 
 export { useAuth }

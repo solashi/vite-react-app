@@ -1,20 +1,50 @@
-import { Button, Container as MContainer, Grid, Stack, styled, TextField } from '@mui/material'
-import Box from '@mui/material/Box'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Alert, Box, Button, Container as MContainer, Grid, Stack, styled } from '@mui/material'
 import Logo from 'assets/images/logo.png'
-import { UserLoginArgs } from 'lib/types'
-import * as React from 'react'
+import { Input } from 'components/Form'
+import { useAuth } from 'lib/hooks'
+import { UserLoginArgs, UserLoginError } from 'lib/types'
+import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import * as yup from 'yup'
+
+const schema = yup
+  .object({
+    email: yup.string().email().required(),
+    password: yup.string().required()
+  })
+  .required()
 
 const Login: React.VFC = () => {
+  const { login, auth } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (auth) {
+      navigate('/', {
+        replace: true
+      })
+    }
+  }, [auth, navigate])
+
+  const [error, setError] = useState('')
+
   const { control, handleSubmit } = useForm<UserLoginArgs>({
     defaultValues: {
       email: '',
       password: ''
-    }
+    },
+    resolver: yupResolver(schema)
   })
 
-  const onSubmit: SubmitHandler<UserLoginArgs> = (values) => {
-    console.log(values)
+  const onSubmit: SubmitHandler<UserLoginArgs> = async (values) => {
+    try {
+      await login(values)
+      navigate('/')
+    } catch (error) {
+      setError((error as UserLoginError).message)
+    }
   }
 
   return (
@@ -23,25 +53,32 @@ const Login: React.VFC = () => {
         <img src={Logo} alt="logo" />
 
         <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError('')}>
+              {error}
+            </Alert>
+          )}
+
+          <Input
             fullWidth
-            id="email"
             label="Email Address"
             name="email"
             autoComplete="email"
+            controlProps={{
+              sx: {
+                mb: 2
+              }
+            }}
+            control={control}
           />
 
-          <TextField
-            margin="normal"
-            required
+          <Input
             fullWidth
             name="password"
             label="Password"
             type="password"
-            id="password"
             autoComplete="current-password"
+            control={control}
           />
 
           <Grid container justifyContent="flex-end">

@@ -1,5 +1,5 @@
 import { useAuth } from 'lib/hooks'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 
 type RequireAuthProps = {
@@ -7,12 +7,8 @@ type RequireAuthProps = {
 }
 
 const RequireAuth: React.VFC<RequireAuthProps> = ({ children }) => {
-  const { auth, getUser } = useAuth()
+  const { auth } = useAuth()
   const location = useLocation()
-
-  useMemo(() => {
-    getUser()
-  }, [])
 
   if (!auth) {
     // Redirect them to the /login page, but save the current location they were
