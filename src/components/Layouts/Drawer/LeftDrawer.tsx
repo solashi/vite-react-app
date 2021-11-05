@@ -21,6 +21,10 @@ const DrawerLeft: React.FC = ({ children }) => {
         '& .MuiDrawer-paper': {
           width: drawerWidth,
           boxSizing: 'border-box'
+        },
+        '& a': {
+          color: '#000',
+          textDecoration: 'none'
         }
       }}
       variant="persistent"
