@@ -1,26 +1,18 @@
 import {
+  styled,
   TableCell,
   tableCellClasses,
   TableRow,
   tableRowClasses,
   TableSortLabel
 } from '@mui/material'
-import { styled } from '@mui/system'
 
 const Cell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    fontSize: 12,
-    lineHeight: '18px',
-    fontWeight: 600,
-    textTransform: 'uppercase',
-    color: theme.palette.text.secondary,
-    backgroundColor: theme.palette.grey[300]
+    backgroundColor: theme.palette.grey[300],
+    fontWeight: 'bold'
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-    fontWeight: 500,
-    color: theme.palette.grey[600],
-    lineHeight: '20px',
     borderColor: theme.palette.grey[200]
   }
 }))
@@ -63,7 +55,7 @@ const CellInSticky = styled(Cell)({
 
 const Row = styled(TableRow)(({ theme }) => ({
   [`&.${tableRowClasses.hover}`]: {
-    cursor: 'pointer',
+    cursor: 'auto',
     '&$hover:hover': {
       backgroundColor: theme.palette.grey[100],
       '& td': {

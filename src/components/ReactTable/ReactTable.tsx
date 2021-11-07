@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import {
   ClickAwayListener,
   Paper,
@@ -6,209 +5,139 @@ import {
   Table,
   TableBody,
   TableContainer,
+  TableFooter,
   TableHead,
   TableProps,
-  Typography
+  TableRow
 } from '@mui/material'
-import { Box, SxProps } from '@mui/system'
+import { SxProps } from '@mui/system'
 import { TableSkeleton, TableSkeletonType } from 'components/Skeleton'
-import { cloneDeep } from 'lodash'
-import { useCallback } from 'react'
-import { Row as RowProps, TableOptions, useRowSelect, useSortBy, useTable } from 'react-table'
-import {
-  Cell,
-  CellInSticky,
-  Row,
-  SortLabel,
-  StickyLeftCell,
-  StickyRightCell
-} from './StyledComponent'
+import { ReactElement } from 'react'
+import { Row as RowProps, TableOptions, useTable } from 'react-table'
+import EmptyTable from './EmptyTable'
+import Pagination from './Pagination'
+import { Cell, Row, SortLabel } from './StyledComponent'
+import { hooks, selectionHook } from './tableHooks'
 
-interface Props<T extends Record<string, unknown>> extends TableOptions<T> {
+interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   tableProps?: TableProps
   sx?: SxProps
-  rowSx?: SxProps
-  cellSx?: SxProps
-  headCellSx?: SxProps
-  bodyCellSx?: SxProps
   onRowClick?(row: RowProps<T>): void
-  FooterSlot?: React.VFC
   onClickAway?(): void
   loading?: boolean
-  fixedColumns?: {
-    left?: number
-    right?: number
-  }
+  selection?: boolean
   skeletonConfig?: TableSkeletonType
+  pageCount?: number
 }
 
-function ReactTable<T extends Record<string, unknown>>(props: Props<T>) {
+function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>): ReactElement {
   const {
     columns,
     data,
+    pageCount = 0,
     tableProps,
-    rowSx,
-    cellSx,
-    headCellSx,
-    bodyCellSx,
+    selection = false,
     onRowClick,
-    FooterSlot,
     onClickAway = () => undefined,
     loading,
-    fixedColumns,
     skeletonConfig,
     sx,
     ...useTableOptions
   } = props
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable<T>(
+  const instance = useTable<T>(
     {
       columns,
       data,
+      initialState: { pageSize: 50 },
+      manualPagination: true,
+      pageCount,
       ...useTableOptions
     },
-    useSortBy,
-    useRowSelect
+    ...hooks,
+    selectionHook(selection)
   )
 
-  const getFixedArray = useCallback(
-    function fixedArray<Type>(arr: Type[]): (Type[] & Type[][]) | Type[] {
-      if (!arr?.length) return []
-      if (!fixedColumns) return arr
-      const _arr = cloneDeep(arr) as Type[] & Type[][]
-      if (fixedColumns?.left) {
-        _arr.unshift(_arr.splice(0, fixedColumns.left))
-      }
-      if (fixedColumns?.right) {
-        _arr.push(_arr.splice(-fixedColumns.right, fixedColumns.right))
-      }
-      return _arr
-    },
-    [fixedColumns]
-  )
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = instance
 
   if (!loading && !data.length) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: 48,
-          backgroundColor: (theme) => theme.palette.grey[100],
-          marginBottom: (theme) => theme.spacing(2),
-          width: '100%',
-          mb: 4
-        }}
-      >
-        <Typography variant="h6" color="text.secondary">
-          No data
-        </Typography>
-      </Box>
-    )
+    return <EmptyTable />
+  }
+
+  if (loading && !data.length) {
+    return <TableSkeleton {...skeletonConfig} />
   }
 
   return (
     <ClickAwayListener onClickAway={onClickAway}>
-      <>
-        {loading && !data.length ? (
-          <TableSkeleton {...skeletonConfig} />
-        ) : (
-          <TableContainer component={Paper} variant="outlined" sx={sx}>
-            <Table {...tableProps} {...getTableProps()}>
-              <TableHead>
-                {headerGroups.map((headerGroup) => (
-                  <Row {...headerGroup.getHeaderGroupProps()}>
-                    {getFixedArray(headerGroup.headers).map((column, index) => {
-                      if (Array.isArray(column)) {
-                        const StickyCell = index === 0 ? StickyLeftCell : StickyRightCell
-                        return (
-                          <StickyCell variant="head" key={index} sx={headCellSx || cellSx}>
-                            {column.map((c) => (
-                              <CellInSticky
-                                style={{ width: c.width }}
-                                component="div"
-                                sortDirection={c.isSortedDesc ? 'desc' : 'asc'}
-                                {...c.getHeaderProps(c.getSortByToggleProps())}
-                              >
-                                <SortLabel
-                                  active={c.isSorted}
-                                  // react-table has a unsorted state which is not treated here
-                                  direction={c.isSortedDesc ? 'desc' : 'asc'}
-                                >
-                                  {c.render('Header')}
-                                </SortLabel>
-                              </CellInSticky>
-                            ))}
-                          </StickyCell>
-                        )
-                      }
-                      return (
-                        <Cell
-                          variant="head"
-                          sx={headCellSx || cellSx}
-                          sortDirection={column.isSortedDesc ? 'desc' : 'asc'}
-                          {...column.getHeaderProps(column.getSortByToggleProps())}
+      <TableContainer component={Paper} sx={sx}>
+        <Table {...tableProps} {...getTableProps()}>
+          <TableHead>
+            {headerGroups.map((headerGroup) => {
+              const { key, ...headerGroupProps } = headerGroup.getHeaderGroupProps()
+              return (
+                <Row key={key} {...headerGroupProps}>
+                  {headerGroup.headers.map((column) => {
+                    const { key, ...cellHeaderProps } = column.getHeaderProps(
+                      column.getSortByToggleProps()
+                    )
+
+                    return (
+                      <Cell
+                        variant="head"
+                        sortDirection={column.isSortedDesc ? 'desc' : 'asc'}
+                        key={key}
+                        {...cellHeaderProps}
+                      >
+                        <SortLabel
+                          active={column.isSorted}
+                          // react-table has a unsorted state which is not treated here
+                          direction={column.isSortedDesc ? 'desc' : 'asc'}
                         >
-                          <SortLabel
-                            active={column.isSorted}
-                            // react-table has a unsorted state which is not treated here
-                            direction={column.isSortedDesc ? 'desc' : 'asc'}
-                          >
-                            <Stack direction="row" alignItems="center">
-                              {column.render('Header')}
-                            </Stack>
-                          </SortLabel>
-                        </Cell>
-                      )
-                    })}
-                  </Row>
-                ))}
-              </TableHead>
-              <TableBody {...getTableBodyProps()}>
-                {rows.map((row) => {
-                  prepareRow(row)
-                  const onRow = () => {
-                    if (typeof onRowClick === 'function') {
-                      onRowClick(row)
-                    }
-                  }
-                  return (
-                    <Row onClick={onRow} hover {...row.getRowProps()} sx={rowSx}>
-                      {getFixedArray(row.cells).map((cell, index) => {
-                        if (Array.isArray(cell)) {
-                          const StickyCell = index === 0 ? StickyLeftCell : StickyRightCell
-                          return (
-                            <StickyCell key={index} sx={bodyCellSx || cellSx} variant="body">
-                              {cell.map((c) => (
-                                <CellInSticky
-                                  style={{ width: c.column.width }}
-                                  component="div"
-                                  {...c.getCellProps()}
-                                >
-                                  {c.render('Cell')}
-                                </CellInSticky>
-                              ))}
-                            </StickyCell>
-                          )
-                        }
+                          <Stack direction="row" alignItems="center">
+                            {column.render('Header')}
+                          </Stack>
+                        </SortLabel>
+                      </Cell>
+                    )
+                  })}
+                </Row>
+              )
+            })}
+          </TableHead>
 
-                        return (
-                          <Cell variant="body" sx={bodyCellSx || cellSx} {...cell.getCellProps()}>
-                            {cell.render('Cell')}
-                          </Cell>
-                        )
-                      })}
-                    </Row>
-                  )
-                })}
-              </TableBody>
-            </Table>
+          <TableBody {...getTableBodyProps()}>
+            {rows.map((row) => {
+              prepareRow(row)
+              const { key, ...getRowProps } = row.getRowProps()
 
-            {FooterSlot && <FooterSlot />}
-          </TableContainer>
-        )}
-      </>
+              const onRow = () => {
+                if (typeof onRowClick === 'function') {
+                  onRowClick(row)
+                }
+              }
+              return (
+                <Row onClick={onRow} hover key={key} {...getRowProps}>
+                  {row.cells.map((cell) => {
+                    const { key, ...getCellProps } = cell.getCellProps()
+                    return (
+                      <Cell variant="body" key={key} {...getCellProps}>
+                        {cell.render('Cell')}
+                      </Cell>
+                    )
+                  })}
+                </Row>
+              )
+            })}
+          </TableBody>
+
+          <TableFooter>
+            <TableRow>
+              <Pagination<T> instance={instance} />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
     </ClickAwayListener>
   )
 }
