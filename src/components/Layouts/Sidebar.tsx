@@ -1,22 +1,14 @@
-import { Button, List, ListItem, ListItemText } from '@mui/material'
-import { styled } from '@mui/system'
+import { Button, List, ListItem, ListItemText, styled } from '@mui/material'
 import { useAuth } from 'lib/hooks'
 import * as React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { grey } from 'styles'
 import { DrawerLeft } from './Drawer'
 
-const ButtonLogout = styled(Button)({
+const ButtonLogout = styled(Button)(({ theme }) => ({
   position: 'absolute',
-  bottom: '15px',
-  right: '15px',
-  color: grey[600],
-  backgroundColor: grey[300],
-  '&:hover': {
-    backgroundColor: grey[600],
-    color: grey[800]
-  }
-})
+  bottom: theme.spacing(2),
+  right: theme.spacing(2)
+}))
 
 const sidebarAdmin = [
   {
