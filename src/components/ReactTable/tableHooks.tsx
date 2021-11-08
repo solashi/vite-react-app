@@ -8,10 +8,18 @@ function selectionHook<T extends Record<string, unknown>>(enabled: boolean) {
       {
         id: '_selector',
         Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => (
-          <Checkbox indeterminate {...getToggleAllRowsSelectedProps()} />
+          <Checkbox
+            onClick={(e) => e.stopPropagation()}
+            indeterminate
+            {...getToggleAllRowsSelectedProps()}
+          />
         ),
         Cell: ({ row }: CellProps<T>) => (
-          <Checkbox indeterminate {...row.getToggleRowSelectedProps()} />
+          <Checkbox
+            onClick={(e) => e.stopPropagation()}
+            indeterminate
+            {...row.getToggleRowSelectedProps()}
+          />
         )
       },
       ...columns

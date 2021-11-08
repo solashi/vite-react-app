@@ -7,17 +7,21 @@ import {
   TableContainer,
   TableFooter,
   TableHead,
-  TableProps,
-  TableRow
+  TableProps
 } from '@mui/material'
 import { SxProps } from '@mui/system'
 import { TableSkeleton, TableSkeletonType } from 'components/Skeleton'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { Row as RowProps, TableOptions, useTable } from 'react-table'
 import EmptyTable from './EmptyTable'
 import Pagination from './Pagination'
 import { Cell, Row, SortLabel } from './StyledComponent'
 import { hooks, selectionHook } from './tableHooks'
+
+export type PaginationMeta = {
+  page: number
+  per_page: number
+}
 
 interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   tableProps?: TableProps
@@ -28,17 +32,22 @@ interface TableProperties<T extends Record<string, unknown>> extends TableOption
   selection?: boolean
   skeletonConfig?: TableSkeletonType
   pageCount?: number
+  handleChangePagination?(paginationMeta: PaginationMeta): void
+  usePaginationQuery?: boolean
+  isPreviousData?: boolean
 }
 
 function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>): ReactElement {
   const {
     columns,
     data,
-    pageCount = 0,
+    pageCount,
     tableProps,
     selection = false,
-    onRowClick,
+    onRowClick = () => undefined,
     onClickAway = () => undefined,
+    handleChangePagination,
+    usePaginationQuery,
     loading,
     skeletonConfig,
     sx,
@@ -49,8 +58,9 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
     {
       columns,
       data,
-      initialState: { pageSize: 50 },
+      initialState: { pageSize: 20 },
       manualPagination: true,
+      autoResetPage: false,
       pageCount,
       ...useTableOptions
     },
@@ -58,14 +68,29 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
     selectionHook(selection)
   )
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = instance
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state: { pageIndex, pageSize }
+  } = instance
 
-  if (!loading && !data.length) {
-    return <EmptyTable />
-  }
+  const hasRowClick = typeof onRowClick === 'function'
+
+  useEffect(() => {
+    if (typeof handleChangePagination === 'function') {
+      handleChangePagination({ page: pageIndex + 1, per_page: pageSize })
+    }
+  }, [pageIndex, pageSize])
 
   if (loading && !data.length) {
     return <TableSkeleton {...skeletonConfig} />
+  }
+
+  if (!loading && !data.length) {
+    return <EmptyTable />
   }
 
   return (
@@ -93,6 +118,7 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
                           active={column.isSorted}
                           // react-table has a unsorted state which is not treated here
                           direction={column.isSortedDesc ? 'desc' : 'asc'}
+                          hideSortIcon={column.id === '_selector'}
                         >
                           <Stack direction="row" alignItems="center">
                             {column.render('Header')}
@@ -111,13 +137,14 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
               prepareRow(row)
               const { key, ...getRowProps } = row.getRowProps()
 
-              const onRow = () => {
-                if (typeof onRowClick === 'function') {
-                  onRowClick(row)
-                }
-              }
               return (
-                <Row onClick={onRow} hover key={key} {...getRowProps}>
+                <Row
+                  onClick={() => onRowClick(row)}
+                  hasRowClick={hasRowClick}
+                  hover
+                  key={key}
+                  {...getRowProps}
+                >
                   {row.cells.map((cell) => {
                     const { key, ...getCellProps } = cell.getCellProps()
                     return (
@@ -132,9 +159,9 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
           </TableBody>
 
           <TableFooter>
-            <TableRow>
+            <Row>
               <Pagination<T> instance={instance} />
-            </TableRow>
+            </Row>
           </TableFooter>
         </Table>
       </TableContainer>

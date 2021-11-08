@@ -53,9 +53,11 @@ const CellInSticky = styled(Cell)({
   border: 'none'
 })
 
-const Row = styled(TableRow)(({ theme }) => ({
+const Row = styled(TableRow, {
+  shouldForwardProp: (prop) => prop !== 'hasRowClick'
+})<{ hasRowClick?: boolean }>(({ theme, hasRowClick }) => ({
   [`&.${tableRowClasses.hover}`]: {
-    cursor: 'auto',
+    cursor: hasRowClick ? 'cursor' : 'auto',
     '&$hover:hover': {
       backgroundColor: theme.palette.grey[100],
       '& td': {
