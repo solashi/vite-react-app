@@ -26,3 +26,5 @@ export type Pagination<T> = {
   to: number
   total: number
 }
+
+export type UnknownObj = Record<string, unknown>
