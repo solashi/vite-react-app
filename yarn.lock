@@ -731,6 +731,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-table@^7.7.7":
+  version "7.7.7"
+  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.7.7.tgz#503be1ce2e06857c11b281629f539358d32671f9"
+  integrity sha512-3l2TP4detx9n5Jt44XhdH7Ku6PYwz6kB83P8W+YcBMUkIHtiw2gsCCcq9c4wyCIcdSwcTlWZ9WqH4PF7Yfbprg==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-transition-group@^4.4.4":
   version "4.4.4"
   resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-4.4.4.tgz#acd4cceaa2be6b757db61ed7b432e103242d163e"
@@ -1602,10 +1609,10 @@ eslint-plugin-prettier@^4.0.0:
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
-eslint-plugin-react-hooks@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.2.0.tgz#8c229c268d468956334c943bb45fc860280f5556"
-  integrity sha512-623WEiZJqxR7VdxFCKLI6d6LLpwJkGPYKODnkH3D7WpOG5KM8yWueBd8TLsNAetEJNF5iJmolaAKO3F8yzyVBQ==
+eslint-plugin-react-hooks@^4.2.1-alpha-ee069065d-20211105:
+  version "4.2.1-alpha-ee069065d-20211105"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.2.1-alpha-ee069065d-20211105.tgz#614382777e5fa85b3c6383d7507d984152399347"
+  integrity sha512-U2Qy5P3gWPlvlUzCmf3BqM8ysrCdeaQ6orKsrU7Q8aiMGOvPzJ1ny7LOIEWmCjcT0AEi9ouxUsrfu77E8whSQQ==
 
 eslint-plugin-react@^7.26.1:
   version "7.26.1"
@@ -3032,6 +3039,11 @@ react-router@6.0.0-beta.8:
   version "6.0.0-beta.8"
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.0.0-beta.8.tgz#99d570b0eaadac9af590e08fd8229d8c3f5558fd"
   integrity sha512-pn3j01FA44yWP5gaHvz3CMVjFnmg5NS/BQ5IIalY7jw2yEKgr+OHB1gxTorakpiMaPOXXbfyUt3t4yZ4UBwE5Q==
+
+react-table@^7.7.0:
+  version "7.7.0"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.7.0.tgz#e2ce14d7fe3a559f7444e9ecfe8231ea8373f912"
+  integrity sha512-jBlj70iBwOTvvImsU9t01LjFjy4sXEtclBovl3mTiqjz23Reu0DKnRza4zlLtOPACx6j2/7MrQIthIK1Wi+LIA==
 
 react-transition-group@^4.4.2:
   version "4.4.2"

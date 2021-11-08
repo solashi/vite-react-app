@@ -24,7 +24,7 @@ const useAuth = () => {
   const logout = async () => {
     await logoutApi()
     setUser(null)
-    setToken(null)
+    localStorage.removeItem('user-token')
   }
 
   const getUser = useAtomCallback(

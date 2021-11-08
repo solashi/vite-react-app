@@ -1,4 +1,5 @@
 import { Layout } from 'components/Layouts'
+import { FullScreenLoading } from 'components/Loader'
 import { useAuth } from 'lib/hooks'
 import { Route, Routes } from 'react-router-dom'
 import { Login } from 'screens/auth'
@@ -10,7 +11,7 @@ const Router: React.VFC = () => {
   const { loading } = useAuth()
 
   if (loading) {
-    return <div>loading...</div>
+    return <FullScreenLoading />
   }
 
   return (
