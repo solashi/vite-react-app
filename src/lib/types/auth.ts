@@ -1,4 +1,4 @@
-import { User } from '.'
+import { AdminUser } from '.'
 
 type UserLoginArgs = {
   email: string
@@ -16,7 +16,7 @@ type UserToken = {
 }
 
 type UserLoginRes = {
-  user: User
+  user: AdminUser
 } & UserToken
 
 export type { UserLoginArgs, UserLoginRes, UserToken, UserLoginError }
