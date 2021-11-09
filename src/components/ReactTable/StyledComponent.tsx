@@ -57,7 +57,7 @@ const Row = styled(TableRow, {
   shouldForwardProp: (prop) => prop !== 'hasRowClick'
 })<{ hasRowClick?: boolean }>(({ theme, hasRowClick }) => ({
   [`&.${tableRowClasses.hover}`]: {
-    cursor: hasRowClick ? 'cursor' : 'auto',
+    cursor: hasRowClick ? 'pointer' : 'auto',
     '&$hover:hover': {
       backgroundColor: theme.palette.grey[100],
       '& td': {
