@@ -14,9 +14,9 @@ import { TableSkeleton, TableSkeletonType } from 'components/Skeleton'
 import { UnknownObj } from 'lib/types'
 import { ReactElement, useEffect } from 'react'
 import { CellProps, Row as RowProps, TableOptions, useTable } from 'react-table'
+import { Cell, Row, SortLabel } from './components'
 import EmptyTable from './EmptyTable'
-import Pagination from './Pagination'
-import { Cell, Row, SortLabel } from './StyledComponent'
+import { Pagination } from './Pagination'
 import { actionHook, hooks, selectionHook } from './tableHooks'
 
 export type PaginationMeta = {

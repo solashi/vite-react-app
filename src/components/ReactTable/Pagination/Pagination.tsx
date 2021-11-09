@@ -60,4 +60,4 @@ function Pagination<T extends Record<string, unknown>>({
   )
 }
 
-export default Pagination
+export { Pagination }

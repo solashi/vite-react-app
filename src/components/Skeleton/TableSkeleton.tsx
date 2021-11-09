@@ -1,5 +1,5 @@
 import { Paper, Skeleton, Table, TableBody, TableContainer, TableHead } from '@mui/material'
-import { Cell, Row } from 'components/ReactTable/StyledComponent'
+import { Cell, Row } from 'components/ReactTable/components/StyledComponent'
 
 export type TableSkeletonType = {
   row_number?: number

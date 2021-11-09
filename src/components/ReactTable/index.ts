@@ -1,2 +1,2 @@
-export * from './CellContainer'
+export * from './components'
 export * from './ReactTable'

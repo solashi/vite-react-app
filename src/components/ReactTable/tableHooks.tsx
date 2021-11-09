@@ -1,7 +1,7 @@
 import { Checkbox } from '@mui/material'
 import { CellProps, HeaderProps, Hooks, usePagination, useRowSelect, useSortBy } from 'react-table'
 import { ActionColumnConfig } from '.'
-import TableAction from './TableAction'
+import { TableAction } from './components'
 
 function selectionHook<T extends Record<string, unknown>>(enabled: boolean) {
   return (hooks: Hooks<T>) => {

@@ -3,7 +3,7 @@ import { useDialog } from 'lib/providers'
 import { UnknownObj } from 'lib/types'
 import { useNavigate } from 'react-router-dom'
 import { CellProps } from 'react-table'
-import { ActionColumnConfig } from '.'
+import { ActionColumnConfig } from '..'
 import { CellContainer } from './CellContainer'
 
 interface TableActionProps<T extends UnknownObj> extends CellProps<T> {
@@ -74,4 +74,4 @@ function TableAction<T extends Record<string, unknown>>(props: TableActionProps<
   )
 }
 
-export default TableAction
+export { TableAction }
