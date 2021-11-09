@@ -5,6 +5,8 @@ import React, { createContext, useCallback, useContext, useMemo, useState } from
 
 type DialogContextValues = (options: DialogUtilsOptions) => Promise<unknown>
 
+const DEFAULT_TYPE = 'confirm'
+
 const DEFAULT_OPTIONS: DialogUtilsOptions = {
   type: 'confirm',
   title: '',
@@ -65,7 +67,7 @@ const DialogUtilsProvider: React.VFC<ProviderProps> = ({ children }) => {
 
   const dialog = useCallback(
     (_options: DialogUtilsOptions) => {
-      const type = _options.type || 'normal'
+      const type = _options.type || DEFAULT_TYPE
       return type === 'normal' ? normal(_options) : confirm(_options)
     },
     [confirm, normal]

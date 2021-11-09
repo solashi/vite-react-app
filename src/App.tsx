@@ -1,5 +1,6 @@
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { useAuth } from 'lib/hooks'
+import DialogUtilsProvider from 'lib/providers/DialogProvider'
 import { queryClient } from 'lib/react-query'
 import { Suspense, useEffect } from 'react'
 import { QueryClientProvider } from 'react-query'
@@ -18,7 +19,9 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <CssBaseline />
         <Suspense fallback="Loading...">
-          <Router />
+          <DialogUtilsProvider>
+            <Router />
+          </DialogUtilsProvider>
         </Suspense>
       </QueryClientProvider>
     </ThemeProvider>

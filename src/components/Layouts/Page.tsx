@@ -7,7 +7,7 @@ type PageProps = {
 
 const Page: React.VFC<PageProps> = ({ children, title, leftHeader, ...paperProps }) => {
   return (
-    <Paper square elevation={3} sx={{ p: 3 }} {...paperProps}>
+    <Paper square elevation={3} sx={{ p: 3, height: '100%' }} {...paperProps}>
       {title && (
         <Stack direction="row" mb={{ md: 6 }}>
           <Typography variant="h4">{title}</Typography>

@@ -30,6 +30,7 @@ export type ActionColumnConfig<T extends UnknownObj> = {
   editText?: string
   deleteText?: string
   needConfirm?: boolean
+  deleteConfirmText?: string
 }
 
 interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {

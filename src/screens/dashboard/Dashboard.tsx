@@ -33,7 +33,7 @@ const Dashboard: React.VFC = () => {
             console.log(row.original.name)
           },
           onDelete: ({ row }: CellProps<AdminUser>) => {
-            alert(row.original.name)
+            console.log(row.original.name)
           }
         }}
       />
