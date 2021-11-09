@@ -4,19 +4,21 @@ import { Page } from 'components/Layouts'
 import { ReactTable } from 'components/ReactTable'
 import { usePaginationQuery } from 'lib/hooks'
 import { useDialog } from 'lib/providers'
-import { AdminUser } from 'lib/types'
+import { AdminUser as UserType } from 'lib/types'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { CellProps, Column } from 'react-table'
 
-const List: React.VFC = () => {
-  const { paginationData } = usePaginationQuery<AdminUser>('admin-users')
+const AdminUser: React.VFC = () => {
+  const { paginationData } = usePaginationQuery<UserType>('admin-users')
+
   const navigate = useNavigate()
+
   const handleCreate = () => {
     navigate('/admin-user/create')
   }
 
-  const columns = useMemo<Column<AdminUser>[]>(
+  const columns = useMemo<Column<UserType>[]>(
     () => [
       {
         Header: 'ID',
@@ -36,7 +38,7 @@ const List: React.VFC = () => {
 
   const dialog = useDialog()
 
-  const deleteConfirm = async ({ row }: CellProps<AdminUser>) => {
+  const deleteConfirm = async ({ row }: CellProps<UserType>) => {
     await dialog({
       description: 'Do you want to delete this cord?'
     })
@@ -57,6 +59,7 @@ const List: React.VFC = () => {
           <Button onClick={handleCreate}>新規追加</Button>
         </Box>
       </Stack>
+
       <ReactTable
         columns={columns}
         {...paginationData}
@@ -68,4 +71,4 @@ const List: React.VFC = () => {
   )
 }
 
-export { List }
+export { AdminUser }

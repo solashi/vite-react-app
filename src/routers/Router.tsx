@@ -2,7 +2,7 @@ import { Layout } from 'components/Layouts'
 import { FullScreenLoading } from 'components/Loader'
 import { useAuth } from 'lib/hooks'
 import { Route, Routes } from 'react-router-dom'
-import { List } from 'screens/admin-user'
+import { AdminUser } from 'screens/admin-user'
 import { Login } from 'screens/auth'
 import { Dashboard } from 'screens/dashboard'
 import { NoMatch } from 'screens/NoMatch'
@@ -27,7 +27,7 @@ const Router: React.VFC = () => {
         }
       >
         <Route index element={<Dashboard />} />
-        <Route path="/admin-user" element={<List />} />
+        <Route path="/admin-user" element={<AdminUser />} />
       </Route>
       <Route path="*" element={<NoMatch />} />
     </Routes>
