@@ -4,6 +4,7 @@ import { UnknownObj } from 'lib/types'
 import { useNavigate } from 'react-router-dom'
 import { CellProps } from 'react-table'
 import { ActionColumnConfig } from '.'
+import { CellContainer } from './CellContainer'
 
 interface TableActionProps<T extends UnknownObj> extends CellProps<T> {
   actionConfig: ActionColumnConfig<T>
@@ -66,10 +67,10 @@ function TableAction<T extends Record<string, unknown>>(props: TableActionProps<
   }
 
   return (
-    <Stack direction="row" spacing={1} onClick={(e) => e.stopPropagation()}>
+    <CellContainer direction="row" spacing={1} onClick={(e) => e.stopPropagation()}>
       {hasEdit && <Button onClick={handleEdit}>{editText}</Button>}
       {hasDelete && <Button onClick={handleDelete}>{deleteText}</Button>}
-    </Stack>
+    </CellContainer>
   )
 }
 
