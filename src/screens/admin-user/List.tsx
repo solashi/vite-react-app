@@ -1,7 +1,9 @@
-import { Button, Grid } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
+import { Box } from '@mui/system'
 import { Page } from 'components/Layouts'
 import { ReactTable } from 'components/ReactTable'
 import { usePaginationQuery } from 'lib/hooks'
+import { useDialog } from 'lib/providers'
 import { AdminUser } from 'lib/types'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router'
@@ -32,35 +34,34 @@ const List: React.VFC = () => {
     []
   )
 
-  const editAdminUser = async (row) => {
-    console.log(row.original.id)
-  }
+  const dialog = useDialog()
 
-  const deleteConfirm = async (row) => {
-    alert(row.original.id)
+  const deleteConfirm = async ({ row }: CellProps<AdminUser>) => {
+    await dialog({
+      description: 'Do you want to delete this cord?'
+    })
+    try {
+      console.log(row.original.id)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
     <Page>
-      <Grid container>
-        <Grid item xs={6}>
-          <h1>管理者管理一覧</h1>
-        </Grid>
-        <Grid item xs={6} justifyContent="flex-end" display="flex">
+      <Stack direction="row" mb={{ md: 6 }} justifyContent="space-between">
+        <Typography variant="h4">管理者管理一覧</Typography>
+
+        <Box>
           <Button>search</Button>
           <Button onClick={handleCreate}>新規追加</Button>
-        </Grid>
-      </Grid>
+        </Box>
+      </Stack>
       <ReactTable
         columns={columns}
         {...paginationData}
         action={{
-          onEdit: ({ row }: CellProps<AdminUser>) => {
-            editAdminUser(row)
-          },
-          onDelete: ({ row }: CellProps<AdminUser>) => {
-            deleteConfirm(row)
-          }
+          onDelete: deleteConfirm
         }}
       />
     </Page>
