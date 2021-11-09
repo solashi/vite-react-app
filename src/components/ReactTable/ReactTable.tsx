@@ -42,7 +42,6 @@ interface TableProperties<T extends Record<string, unknown>> extends TableOption
   skeletonConfig?: TableSkeletonType
   pageCount?: number
   handleChangePagination?(paginationMeta: PaginationMeta): void
-  usePaginationQuery?: boolean
   isPreviousData?: boolean
   action?: ActionColumnConfig<T>
 }
@@ -58,7 +57,6 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
     onRowClick = () => undefined,
     onClickAway = () => undefined,
     handleChangePagination,
-    usePaginationQuery,
     loading,
     skeletonConfig,
     sx,
@@ -95,7 +93,7 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
     if (typeof handleChangePagination === 'function') {
       handleChangePagination({ page: pageIndex + 1, per_page: pageSize })
     }
-  }, [pageIndex, pageSize])
+  }, [handleChangePagination, pageIndex, pageSize])
 
   if (loading && !data.length) {
     return <TableSkeleton {...skeletonConfig} />

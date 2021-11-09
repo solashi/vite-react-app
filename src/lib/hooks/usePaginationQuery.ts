@@ -25,7 +25,7 @@ function usePaginationQuery<T>(endpoint: string, params?: Record<string, unknown
     if (hasMore) {
       queryClient.prefetchQuery([endpoint, { page: meta.page + 1, per_page: meta.per_page }])
     }
-  }, [data, meta, queryClient])
+  }, [data, endpoint, meta, queryClient])
 
   const handleChangePagination = useCallback((paginationMeta: PaginationMeta) => {
     setMeta(paginationMeta)
