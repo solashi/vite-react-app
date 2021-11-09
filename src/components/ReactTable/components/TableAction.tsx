@@ -68,7 +68,7 @@ function TableAction<T extends Record<string, unknown>>(props: TableActionProps<
 
   return (
     <CellContainer direction="row" spacing={1} onClick={(e) => e.stopPropagation()}>
-      {hasEdit && <Button onClick={handleEdit}>{editText}</Button>}
+      <Button onClick={handleEdit}>{editText}</Button>
       {hasDelete && <Button onClick={handleDelete}>{deleteText}</Button>}
     </CellContainer>
   )
