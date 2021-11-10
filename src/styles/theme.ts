@@ -3,8 +3,9 @@ import { grey, yellow } from './colors'
 
 const defaultTheme = createTheme({
   palette: {
-    secondary: {
-      main: yellow[600]
+    primary: {
+      main: yellow[600],
+      light: yellow[300]
     },
     grey: {
       900: grey[900],
@@ -12,6 +13,9 @@ const defaultTheme = createTheme({
       300: grey[300],
       200: grey[200],
       100: grey[100]
+    },
+    background: {
+      default: grey[100]
     }
   },
   typography: {
