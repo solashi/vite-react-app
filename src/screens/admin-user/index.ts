@@ -1,2 +1,2 @@
 export * from './AdminUser'
-export * from './CreateAdminUser'
+export * from './FormAdminUser'

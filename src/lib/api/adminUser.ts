@@ -1,14 +1,20 @@
 import { request } from 'lib/request'
 import { AdminUser } from 'lib/types'
 
-const createAdminUserApi = (values: FormData) => request.post<AdminUser>('admin-users', values)
-
-type UpdateAdminUser = {
-  id: number
-  formData: FormData
+export type CreateAdminUser = {
+  name: string
+  email: string
+  password: string
 }
 
+export type UpdateAdminUser = CreateAdminUser & {
+  id: number
+}
+
+const createAdminUserApi = (values: CreateAdminUser) =>
+  request.post<AdminUser>('admin-users', values)
+
 const updateAdminUserApi = (values: UpdateAdminUser) =>
-  request.post<UpdateAdminUser>(`admin-users/${values.id}?_method=put`, values.formData)
+  request.post<AdminUser>(`admin-users/${values.id}?_method=put`, values)
 
 export { createAdminUserApi, updateAdminUserApi }

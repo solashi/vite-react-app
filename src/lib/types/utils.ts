@@ -28,4 +28,9 @@ export type Pagination<T> = {
   total: number
 }
 
+export type CreateResponse<T> = {
+  message: string
+  data: T[]
+}
+
 export type UnknownObj = Record<string, unknown>
