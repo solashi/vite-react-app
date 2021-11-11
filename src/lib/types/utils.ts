@@ -34,3 +34,7 @@ export type CreateResponse<T> = {
 }
 
 export type UnknownObj = Record<string, unknown>
+
+export type ServerValidateError<T> = {
+  errors: Record<keyof T, string>
+}

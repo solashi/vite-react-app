@@ -35,11 +35,11 @@ const Input: React.FC<InputProps> = ({
 }) => {
   const {
     field: { ref, ...inputProps },
-    fieldState: { invalid, error }
+    fieldState: { error }
   } = useController({ name, control, defaultValue })
 
   return (
-    <FormControl fullWidth={fullWidth} error={invalid} {...controlProps}>
+    <FormControl fullWidth={fullWidth} error={!!error} {...controlProps}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
 
       <InputStyled {...inputProps} {...props} inputRef={ref} />
@@ -49,7 +49,7 @@ const Input: React.FC<InputProps> = ({
         </FormHelper>
       )}
 
-      {invalid && (
+      {!!error && (
         <FormHelper id={name} error>
           {error?.message}
         </FormHelper>

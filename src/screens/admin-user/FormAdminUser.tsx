@@ -9,6 +9,7 @@ import {
   updateAdminUserApi
 } from 'lib/api/adminUser'
 import { AdminUser } from 'lib/types'
+import { handleValidateErrors } from 'lib/utils'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQuery } from 'react-query'
 import { useNavigate, useParams } from 'react-router'
@@ -36,13 +37,7 @@ const FormAdminUser: React.VFC = () => {
   const navigate = useNavigate()
   const slug = useParams()
 
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    setError,
-    formState: { errors }
-  } = useForm<CreateAdminUser | UpdateAdminUser>({
+  const { control, handleSubmit, setValue, setError } = useForm<CreateAdminUser | UpdateAdminUser>({
     defaultValues: {
       id: Number(slug?.id),
       name: '',
@@ -63,59 +58,21 @@ const FormAdminUser: React.VFC = () => {
   const createAdminUser = useMutation(createAdminUserApi)
   const updateAdminUser = useMutation(updateAdminUserApi)
 
-  const onSubmit: SubmitHandler<AdminUser> = async (values) => {
+  const onSubmit: SubmitHandler<CreateAdminUser | UpdateAdminUser> = async (values) => {
     try {
       if (!slug?.id) {
-        await createAdminUser.mutate(values, {
-          onSuccess: () => {
-            navigate('/admin-user')
-          },
-          onError(error: any) {
-            if (error.errors) {
-              for (const name in error.errors) {
-                console.log(name, error.errors[name])
-                setError(
-                  name as keyof CreateAdminUser,
-                  {
-                    message: error.errors[name]
-                  },
-                  {
-                    shouldFocus: true
-                  }
-                )
-              }
-            }
-          }
-        })
+        await createAdminUser.mutateAsync(values)
       } else {
-        await updateAdminUser.mutate(values as UpdateAdminUser, {
-          onSuccess: () => {
-            navigate('/admin-user')
-          },
-          onError(error: any) {
-            if (error.errors) {
-              for (const name in error.errors) {
-                console.log(name, error.errors[name])
-                setError(
-                  name as keyof CreateAdminUser,
-                  {
-                    message: error.errors[name]
-                  },
-                  {
-                    shouldFocus: true
-                  }
-                )
-              }
-            }
-          }
-        })
+        await updateAdminUser.mutateAsync(values as UpdateAdminUser)
       }
-    } catch (error: any) {
-      console.log(1111111, error)
+
+      navigate('/admin-user')
+    } catch (error) {
+      if (error.errors) {
+        handleValidateErrors(error, setError)
+      }
     }
   }
-
-  console.log(errors)
 
   return (
     <Page title="管理者新規登録">

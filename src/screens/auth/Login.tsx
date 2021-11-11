@@ -9,7 +9,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
 
-const schema = yup
+const validateSchema = yup
   .object({
     email: yup.string().email().required(),
     password: yup.string().required()
@@ -35,7 +35,7 @@ const Login: React.VFC = () => {
       email: '',
       password: ''
     },
-    resolver: yupResolver(schema)
+    resolver: yupResolver(validateSchema)
   })
 
   const onSubmit: SubmitHandler<UserLoginArgs> = async (values) => {
