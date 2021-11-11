@@ -6,7 +6,7 @@ import { AdminUser, FormAdminUser } from 'screens/admin-user'
 import { Login } from 'screens/auth'
 import { CustomerCompany } from 'screens/customer-company'
 import { Dashboard } from 'screens/dashboard'
-import { EventConstructor } from 'screens/event-constructor'
+import { EventInstructor } from 'screens/event-instructor'
 import { NoMatch } from 'screens/NoMatch'
 import { RequireAuth } from './RequireAuth'
 
