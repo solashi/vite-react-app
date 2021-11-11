@@ -8,13 +8,13 @@ import { useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { CellProps, Column } from 'react-table'
 
-const EventInstructor: React.VFC = () => {
+const Instructor: React.VFC = () => {
   const { paginationData } = usePaginationQuery<AdminUser>('admin-users')
 
   const navigate = useNavigate()
 
   const handleCreate = () => {
-    navigate('/event-instructor/create')
+    navigate('/instructor/create')
   }
 
   const columns = useMemo<Column<AdminUser>[]>(
@@ -74,4 +74,4 @@ const EventInstructor: React.VFC = () => {
   )
 }
 
-export { EventInstructor }
+export { Instructor }

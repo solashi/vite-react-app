@@ -41,7 +41,7 @@ const sidebarAdmin = [
   },
   {
     label: 'イイベント講師管理',
-    path: '/event-instructor'
+    path: '/instructor'
   },
   {
     label: 'コンシェルジュ管理',
