@@ -60,13 +60,7 @@ const AdminUser: React.VFC = () => {
         </Box>
       </Stack>
 
-      <ReactTable
-        columns={columns}
-        {...paginationData}
-        action={{
-          onDelete: deleteConfirm
-        }}
-      />
+      <ReactTable columns={columns} {...paginationData} onActionDelete={deleteConfirm} />
     </Page>
   )
 }

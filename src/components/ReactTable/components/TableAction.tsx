@@ -1,33 +1,42 @@
 import { Button, Stack } from '@mui/material'
 import { useDialog } from 'lib/providers'
 import { UnknownObj } from 'lib/types'
+import { memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CellProps } from 'react-table'
 import { ActionColumnConfig } from '..'
 import { CellContainer } from './CellContainer'
 
 interface TableActionProps<T extends UnknownObj> extends CellProps<T> {
-  actionConfig: ActionColumnConfig<T>
+  actionConfig?: ActionColumnConfig
+  onActionEdit?(props: CellProps<T>): void
+  onActionDelete?(props: CellProps<T>): void
+}
+
+const defaultConfig = {
+  editText: '編集',
+  deleteText: '削除',
+  deleteConfirmText: 'Do you want to delete this record?',
+  needConfirm: false
 }
 
 export const TableActionContainer = <Stack onClick={(e) => e.stopPropagation()} />
 
 function TableAction<T extends Record<string, unknown>>(props: TableActionProps<T>) {
-  const { row, actionConfig } = props
+  const { row, actionConfig, onActionEdit, onActionDelete } = props
   const {
-    onDelete,
-    onEdit,
     editText = '編集',
     deleteText = '削除',
     deleteConfirmText = 'Do you want to delete this record?',
     needConfirm = false
-  } = actionConfig
+  } = actionConfig || defaultConfig
+
   const { original } = row
   const navigate = useNavigate()
   const dialog = useDialog()
 
-  const hasEdit = typeof onEdit === 'function'
-  const hasDelete = typeof onDelete === 'function'
+  const hasEdit = typeof onActionEdit === 'function'
+  const hasDelete = typeof onActionDelete === 'function'
 
   const defaultEditAction = () => {
     navigate(`edit/${original.id}`)
@@ -35,7 +44,7 @@ function TableAction<T extends Record<string, unknown>>(props: TableActionProps<
 
   const handleEdit = () => {
     if (hasEdit) {
-      onEdit(props)
+      onActionEdit(props)
     } else {
       defaultEditAction()
     }
@@ -43,7 +52,7 @@ function TableAction<T extends Record<string, unknown>>(props: TableActionProps<
 
   const _delete = () => {
     if (hasDelete) {
-      onDelete(props)
+      onActionDelete(props)
     }
   }
 
@@ -51,7 +60,7 @@ function TableAction<T extends Record<string, unknown>>(props: TableActionProps<
     try {
       if (hasDelete) {
         await dialog({ description: deleteConfirmText })
-        onDelete(props)
+        onActionDelete(props)
       }
     } catch (error) {
       console.log(error)
@@ -67,11 +76,11 @@ function TableAction<T extends Record<string, unknown>>(props: TableActionProps<
   }
 
   return (
-    <CellContainer direction="row" spacing={1} onClick={(e) => e.stopPropagation()}>
+    <CellContainer direction="row" spacing={1}>
       <Button onClick={handleEdit}>{editText}</Button>
       {hasDelete && <Button onClick={handleDelete}>{deleteText}</Button>}
     </CellContainer>
   )
 }
 
-export { TableAction }
+export default memo(TableAction) as typeof TableAction

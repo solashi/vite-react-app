@@ -28,13 +28,8 @@ const Dashboard: React.VFC = () => {
         columns={columns}
         {...paginationData}
         onRowClick={() => console.log('on row click')}
-        action={{
-          onEdit: ({ row }: CellProps<AdminUser>) => {
-            console.log(row.original.name)
-          },
-          onDelete: ({ row }: CellProps<AdminUser>) => {
-            console.log(row.original.name)
-          }
+        onActionDelete={({ row }: CellProps<AdminUser>) => {
+          alert(row.original.name)
         }}
       />
     </Page>

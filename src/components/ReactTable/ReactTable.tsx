@@ -11,7 +11,6 @@ import {
 } from '@mui/material'
 import { SxProps } from '@mui/system'
 import { TableSkeleton, TableSkeletonType } from 'components/Skeleton'
-import { UnknownObj } from 'lib/types'
 import { ReactElement, useEffect } from 'react'
 import { CellProps, Row as RowProps, TableOptions, useTable } from 'react-table'
 import { Cell, Row, SortLabel } from './components'
@@ -24,9 +23,7 @@ export type PaginationMeta = {
   per_page: number
 }
 
-export type ActionColumnConfig<T extends UnknownObj> = {
-  onEdit?(props: CellProps<T>): void
-  onDelete?(props: CellProps<T>): void
+export type ActionColumnConfig = {
   editText?: string
   deleteText?: string
   needConfirm?: boolean
@@ -44,7 +41,9 @@ interface TableProperties<T extends Record<string, unknown>> extends TableOption
   pageCount?: number
   handleChangePagination?(paginationMeta: PaginationMeta): void
   isPreviousData?: boolean
-  action?: ActionColumnConfig<T>
+  actionConfig?: ActionColumnConfig
+  onActionEdit?(props: CellProps<T>): void
+  onActionDelete?(props: CellProps<T>): void
 }
 
 function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>): ReactElement {
@@ -54,7 +53,9 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
     pageCount,
     tableProps,
     selection = false,
-    action,
+    actionConfig,
+    onActionEdit,
+    onActionDelete,
     onRowClick = () => undefined,
     onClickAway = () => undefined,
     handleChangePagination,
@@ -76,7 +77,7 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
     },
     ...hooks,
     selectionHook(selection),
-    actionHook(action)
+    actionHook({ actionConfig, onActionEdit, onActionDelete })
   )
 
   const {

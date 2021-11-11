@@ -1,7 +1,8 @@
 import { Checkbox } from '@mui/material'
+import { UnknownObj } from 'lib/types'
 import { CellProps, HeaderProps, Hooks, usePagination, useRowSelect, useSortBy } from 'react-table'
 import { ActionColumnConfig } from '.'
-import { TableAction } from './components'
+import TableAction from './components/TableAction'
 
 function selectionHook<T extends Record<string, unknown>>(enabled: boolean) {
   return (hooks: Hooks<T>) => {
@@ -29,14 +30,31 @@ function selectionHook<T extends Record<string, unknown>>(enabled: boolean) {
   }
 }
 
-function actionHook<T extends Record<string, unknown>>(action?: ActionColumnConfig<T>) {
+export type ActionHookArgs<T extends UnknownObj> = {
+  actionConfig?: ActionColumnConfig
+  onActionEdit?(props: CellProps<T>): void
+  onActionDelete?(props: CellProps<T>): void
+}
+
+function actionHook<T extends Record<string, unknown>>({
+  actionConfig,
+  onActionDelete,
+  onActionEdit
+}: ActionHookArgs<T>) {
   return (hooks: Hooks<T>) => {
-    if (!action) return
+    if (!(onActionDelete || onActionEdit)) return
     hooks.allColumns.push((columns) => [
       ...columns,
       {
         id: '__action',
-        Cell: (props: CellProps<T>) => <TableAction<T> actionConfig={action} {...props} />
+        Cell: (props: CellProps<T>) => (
+          <TableAction<T>
+            actionConfig={actionConfig}
+            onActionEdit={onActionEdit}
+            onActionDelete={onActionDelete}
+            {...props}
+          />
+        )
       }
     ])
   }
