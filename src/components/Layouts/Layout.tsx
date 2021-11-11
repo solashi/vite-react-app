@@ -5,7 +5,7 @@ import Sidebar from './Sidebar'
 
 const Layout: React.VFC = () => {
   return (
-    <Box sx={{ display: 'flex' }} bgcolor="background.default">
+    <Box sx={{ display: 'flex' }} bgcolor="grey.100">
       <Sidebar />
       <Main>
         <Outlet />

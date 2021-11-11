@@ -13,9 +13,6 @@ const defaultTheme = createTheme({
       300: grey[300],
       200: grey[200],
       100: grey[100]
-    },
-    background: {
-      default: grey[100]
     }
   },
   typography: {
