@@ -2,7 +2,7 @@ import { Layout } from 'components/Layouts'
 import { FullScreenLoading } from 'components/Loader'
 import { useAuth } from 'lib/hooks'
 import { Route, Routes } from 'react-router-dom'
-import { AdminUser } from 'screens/admin-user'
+import { AdminUser, CreateAdminUser } from 'screens/admin-user'
 import { Login } from 'screens/auth'
 import { Dashboard } from 'screens/dashboard'
 import { NoMatch } from 'screens/NoMatch'
@@ -28,6 +28,8 @@ const Router: React.VFC = () => {
       >
         <Route index element={<Dashboard />} />
         <Route path="/admin-user" element={<AdminUser />} />
+        <Route path="/admin-user/create" element={<CreateAdminUser />} />
+        <Route path="/admin-user/edit/:id" element={<CreateAdminUser />} />
       </Route>
       <Route path="*" element={<NoMatch />} />
     </Routes>
