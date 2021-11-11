@@ -1,4 +1,5 @@
 export * from './auth'
 export * from './customerCompany'
+export * from './instructor'
 export * from './user'
 export * from './utils'

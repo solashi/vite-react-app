@@ -3,21 +3,22 @@ import { Page } from 'components/Layouts'
 import { ReactTable } from 'components/ReactTable'
 import { usePaginationQuery } from 'lib/hooks'
 import { useDialog } from 'lib/providers'
-import { AdminUser } from 'lib/types'
+import { Instrutor as InstrutorType } from 'lib/types'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { CellProps, Column } from 'react-table'
 
 const Instructor: React.VFC = () => {
-  const { paginationData } = usePaginationQuery<AdminUser>('admin-users')
+  const { paginationData } = usePaginationQuery<InstrutorType>('instructors')
 
   const navigate = useNavigate()
+  const dialog = useDialog()
 
   const handleCreate = () => {
     navigate('/instructor/create')
   }
 
-  const columns = useMemo<Column<AdminUser>[]>(
+  const columns = useMemo<Column<InstrutorType>[]>(
     () => [
       {
         Header: 'ID',
@@ -29,19 +30,17 @@ const Instructor: React.VFC = () => {
       },
       {
         Header: '名前(English)',
-        accessor: 'email'
+        accessor: 'name_en'
       },
       {
-        Headers: '報酬金額/回',
-        accessor: 'super_admin_flg'
+        Header: '報酬金額/回',
+        accessor: 'unit_price'
       }
     ],
     []
   )
 
-  const dialog = useDialog()
-
-  const deleteConfirm = async ({ row }: CellProps<AdminUser>) => {
+  const deleteConfirm = async ({ row }: CellProps<InstrutorType>) => {
     await dialog({
       description: 'Do you want to delete this cord?'
     })
