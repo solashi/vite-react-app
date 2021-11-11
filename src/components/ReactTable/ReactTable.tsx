@@ -71,7 +71,7 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
     {
       columns,
       data,
-      initialState: { pageSize: 20 },
+      initialState: { pageSize: 10 },
       manualPagination: true,
       autoResetPage: false,
       pageCount,

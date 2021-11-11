@@ -42,7 +42,7 @@ function Pagination<T extends Record<string, unknown>>({
 
   return (
     <TablePagination
-      rowsPerPageOptions={[20, 50, 100, { label: 'All', value: -1 }]}
+      rowsPerPageOptions={[10, 50, 100, { label: 'All', value: -1 }]}
       colSpan={instance.allColumns.length}
       count={pageCount}
       rowsPerPage={pageSize}

@@ -6,7 +6,7 @@ import { useQuery, useQueryClient } from 'react-query'
 function usePaginationQuery<T>(endpoint: string, params?: Record<string, unknown>) {
   const [meta, setMeta] = useState<PaginationMeta>({
     page: 1,
-    per_page: 20
+    per_page: 10
   })
 
   const queryClient = useQueryClient()
