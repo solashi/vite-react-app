@@ -4,6 +4,7 @@ import Logo from 'assets/images/logo.png'
 import { Input } from 'components/Form'
 import { useAuth } from 'lib/hooks'
 import { UserLoginArgs, UserLoginError } from 'lib/types'
+import { handleValidateErrors } from 'lib/utils'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -46,15 +47,11 @@ const Login: React.VFC = () => {
     try {
       await login(values)
       navigate('/')
-    } catch (error: any) {
-      if (error?.message) {
+    } catch (error) {
+      if (error.message) {
         setError((error as UserLoginError).message)
-      } else if (error?.errors) {
-        for (const name in error.errors) {
-          setFormError(name as keyof UserLoginArgs, {
-            message: error.errors[name]
-          })
-        }
+      } else if (error.errors) {
+        handleValidateErrors(error, setFormError)
       }
     }
   }
