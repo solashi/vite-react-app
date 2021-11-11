@@ -30,7 +30,11 @@ const Login: React.VFC = () => {
 
   const [error, setError] = useState('')
 
-  const { control, handleSubmit } = useForm<UserLoginArgs>({
+  const {
+    control,
+    handleSubmit,
+    setError: setFormError
+  } = useForm<UserLoginArgs>({
     defaultValues: {
       email: '',
       password: ''
@@ -42,8 +46,16 @@ const Login: React.VFC = () => {
     try {
       await login(values)
       navigate('/')
-    } catch (error) {
-      setError((error as UserLoginError).message)
+    } catch (error: any) {
+      if (error?.message) {
+        setError((error as UserLoginError).message)
+      } else if (error?.errors) {
+        for (const name in error.errors) {
+          setFormError(name as keyof UserLoginArgs, {
+            message: error.errors[name]
+          })
+        }
+      }
     }
   }
 
