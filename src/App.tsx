@@ -8,11 +8,11 @@ import { Router } from 'routers'
 import { defaultTheme } from 'styles'
 
 function App() {
-  const { getUser } = useAuth()
+  const { fetchUser } = useAuth()
 
   useEffect(() => {
-    getUser()
-  }, [getUser])
+    fetchUser()
+  }, [fetchUser])
 
   return (
     <ThemeProvider theme={defaultTheme}>

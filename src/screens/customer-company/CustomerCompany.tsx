@@ -1,12 +1,18 @@
 import { Page } from 'components/Layouts'
-import { ReactTable } from 'components/ReactTable'
-import { usePaginationQuery } from 'lib/hooks'
+import { ActionColumnConfig, ReactTable } from 'components/ReactTable'
+import { useApiResource, usePaginationQuery } from 'lib/hooks'
 import { CustomerCompany as Company } from 'lib/types'
-import { useMemo } from 'react'
-import { Column } from 'react-table'
+import { useCallback, useMemo } from 'react'
+import { CellProps, Column } from 'react-table'
+import LeftHeader from './LeftHeader'
+
+const actionConfig: ActionColumnConfig = {
+  needConfirm: true
+}
 
 const CustomerCompany: React.VFC = () => {
-  const { paginationData } = usePaginationQuery<Company>('companies')
+  const { paginationData, refetch } = usePaginationQuery<Company>('companies')
+  const { deleteApi } = useApiResource('companies')
 
   const columns = useMemo<Column<Company>[]>(
     () => [
@@ -22,9 +28,27 @@ const CustomerCompany: React.VFC = () => {
     []
   )
 
+  const handleDelete = useCallback(
+    async ({ row }: CellProps<Company>) => {
+      try {
+        await deleteApi(row.original.id)
+        refetch()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [deleteApi, refetch]
+  )
+
   return (
-    <Page title="企業一覧">
-      <ReactTable<Company> columns={columns} {...paginationData} />
+    <Page title="企業一覧" leftHeader={<LeftHeader />}>
+      <ReactTable<Company>
+        columns={columns}
+        defaultActionEdit
+        actionConfig={actionConfig}
+        onActionDelete={handleDelete}
+        {...paginationData}
+      />
     </Page>
   )
 }

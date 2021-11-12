@@ -55,8 +55,10 @@ const AdminUser: React.VFC = () => {
         <Typography variant="h4">管理者管理一覧</Typography>
 
         <Box>
-          <Button>search</Button>
-          <Button onClick={handleCreate}>新規追加</Button>
+          <Button variant="textBold">絞り込み</Button>
+          <Button variant="textBold" onClick={handleCreate}>
+            新規追加
+          </Button>
         </Box>
       </Stack>
 

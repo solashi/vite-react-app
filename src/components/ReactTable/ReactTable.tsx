@@ -132,7 +132,7 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
                           active={column.isSorted}
                           // react-table has a unsorted state which is not treated here
                           direction={column.isSortedDesc ? 'desc' : 'asc'}
-                          hideSortIcon={column.id === '_selector'}
+                          hideSortIcon={column.id === '_selector' || column.id === '__action'}
                         >
                           <Stack direction="row" alignItems="center">
                             {column.render('Header')}

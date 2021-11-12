@@ -42,7 +42,7 @@ function usePaginationQuery<T>(endpoint: string, params?: Record<string, unknown
     [data, isFetching, isPreviousData, handleChangePagination]
   )
 
-  return { paginationData, queryResult }
+  return { paginationData, ...queryResult }
 }
 
 export { usePaginationQuery }
