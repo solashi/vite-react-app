@@ -34,12 +34,14 @@ export type ActionHookArgs<T extends UnknownObj> = {
   actionConfig?: ActionColumnConfig
   onActionEdit?(props: CellProps<T>): void
   onActionDelete?(props: CellProps<T>): void
+  defaultActionEdit?: boolean
 }
 
 function actionHook<T extends Record<string, unknown>>({
   actionConfig,
   onActionDelete,
-  onActionEdit
+  onActionEdit,
+  defaultActionEdit
 }: ActionHookArgs<T>) {
   return (hooks: Hooks<T>) => {
     if (!(onActionDelete || onActionEdit)) return
@@ -52,6 +54,7 @@ function actionHook<T extends Record<string, unknown>>({
             actionConfig={actionConfig}
             onActionEdit={onActionEdit}
             onActionDelete={onActionDelete}
+            defaultActionEdit={defaultActionEdit}
             {...props}
           />
         )

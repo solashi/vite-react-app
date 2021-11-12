@@ -11,6 +11,7 @@ interface TableActionProps<T extends UnknownObj> extends CellProps<T> {
   actionConfig?: ActionColumnConfig
   onActionEdit?(props: CellProps<T>): void
   onActionDelete?(props: CellProps<T>): void
+  defaultActionEdit?: boolean
 }
 
 const defaultConfig = {
@@ -23,7 +24,7 @@ const defaultConfig = {
 export const TableActionContainer = <Stack onClick={(e) => e.stopPropagation()} />
 
 function TableAction<T extends Record<string, unknown>>(props: TableActionProps<T>) {
-  const { row, actionConfig, onActionEdit, onActionDelete } = props
+  const { row, actionConfig, onActionEdit, onActionDelete, defaultActionEdit } = props
   const {
     editText = '編集',
     deleteText = '削除',
@@ -77,7 +78,7 @@ function TableAction<T extends Record<string, unknown>>(props: TableActionProps<
 
   return (
     <CellContainer direction="row" spacing={1}>
-      <Button onClick={handleEdit}>{editText}</Button>
+      {!!(defaultActionEdit || hasEdit) && <Button onClick={handleEdit}>{editText}</Button>}
       {hasDelete && <Button onClick={handleDelete}>{deleteText}</Button>}
     </CellContainer>
   )

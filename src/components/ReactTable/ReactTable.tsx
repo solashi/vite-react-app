@@ -44,6 +44,7 @@ interface TableProperties<T extends Record<string, unknown>> extends TableOption
   actionConfig?: ActionColumnConfig
   onActionEdit?(props: CellProps<T>): void
   onActionDelete?(props: CellProps<T>): void
+  defaultActionEdit?: boolean
 }
 
 function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>): ReactElement {
@@ -60,6 +61,7 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
     onClickAway = () => undefined,
     handleChangePagination,
     loading,
+    defaultActionEdit,
     skeletonConfig,
     sx,
     ...useTableOptions
@@ -77,7 +79,7 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
     },
     ...hooks,
     selectionHook(selection),
-    actionHook({ actionConfig, onActionEdit, onActionDelete })
+    actionHook({ actionConfig, onActionEdit, onActionDelete, defaultActionEdit })
   )
 
   const {
