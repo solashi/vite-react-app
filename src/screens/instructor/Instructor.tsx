@@ -65,9 +65,8 @@ const Instructor: React.VFC = () => {
       <ReactTable
         columns={columns}
         {...paginationData}
-        action={{
-          onDelete: deleteConfirm
-        }}
+        defaultActionEdit
+        onActionDelete={deleteConfirm}
       />
     </Page>
   )
