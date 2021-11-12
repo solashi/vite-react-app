@@ -44,7 +44,7 @@ function actionHook<T extends Record<string, unknown>>({
   defaultActionEdit
 }: ActionHookArgs<T>) {
   return (hooks: Hooks<T>) => {
-    if (!(onActionDelete || onActionEdit)) return
+    if (!(onActionDelete || onActionEdit || defaultActionEdit)) return
     hooks.allColumns.push((columns) => [
       ...columns,
       {
