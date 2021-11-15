@@ -6,15 +6,16 @@ import {
   OutlinedInputProps,
   styled
 } from '@mui/material'
-import { useController, UseControllerProps } from 'react-hook-form'
+import { Control, useController, UseControllerProps } from 'react-hook-form'
+import { ColorAdornment } from './ColorAdornment'
 import { FormHelper } from './FormHelper'
 import { FormLabel } from './FormLabel'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type InputProps = UseControllerProps<any> &
+export type InputProps<T> = UseControllerProps<T> &
   OutlinedInputProps & {
     controlProps?: FormControlProps
     helperText?: string
+    colorPicker?: boolean
   }
 
 const InputStyled = styled(OutlinedInput)(({ theme }) => ({
@@ -23,7 +24,7 @@ const InputStyled = styled(OutlinedInput)(({ theme }) => ({
   }
 }))
 
-const Input: React.FC<InputProps> = ({
+function Input<T>({
   name,
   control,
   defaultValue,
@@ -31,8 +32,10 @@ const Input: React.FC<InputProps> = ({
   controlProps,
   label,
   helperText,
+  colorPicker,
+  readOnly,
   ...props
-}) => {
+}: InputProps<T>) {
   const {
     field: { ref, ...inputProps },
     fieldState: { error }
@@ -42,7 +45,23 @@ const Input: React.FC<InputProps> = ({
     <FormControl fullWidth={fullWidth} error={!!error} {...controlProps}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
 
-      <InputStyled {...inputProps} {...props} inputRef={ref} />
+      <InputStyled
+        autoComplete="off"
+        {...inputProps}
+        {...props}
+        readOnly={colorPicker || readOnly}
+        startAdornment={
+          colorPicker ? (
+            <ColorAdornment
+              name={name}
+              control={control as Control<T, object>}
+              onChange={inputProps.onChange}
+            />
+          ) : null
+        }
+        inputRef={ref}
+      />
+
       {helperText && (
         <FormHelper id={name} error={false}>
           {helperText}
