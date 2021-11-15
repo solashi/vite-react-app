@@ -25,7 +25,10 @@ export const TableActionContainer = <Stack onClick={(e) => e.stopPropagation()} 
 
 function TableAction<T extends Record<string, unknown>>(props: TableActionProps<T>) {
   const { row, actionConfig, onActionEdit, onActionDelete, defaultActionEdit } = props
-  const { editText, deleteText, deleteConfirmText, needConfirm } = actionConfig || defaultConfig
+  const { editText, deleteText, deleteConfirmText, needConfirm } = Object.assign(
+    defaultConfig,
+    actionConfig
+  )
 
   const { original } = row
   const navigate = useNavigate()

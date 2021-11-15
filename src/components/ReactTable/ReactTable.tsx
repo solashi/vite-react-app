@@ -57,7 +57,7 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
     actionConfig,
     onActionEdit,
     onActionDelete,
-    onRowClick = () => undefined,
+    onRowClick,
     onClickAway = () => undefined,
     handleChangePagination,
     loading,
@@ -153,7 +153,7 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
 
               return (
                 <Row
-                  onClick={() => onRowClick(row)}
+                  onClick={() => hasRowClick && onRowClick(row)}
                   hasRowClick={hasRowClick}
                   hover
                   key={key}
