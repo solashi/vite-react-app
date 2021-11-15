@@ -4,15 +4,16 @@ import { ReactTable } from 'components/ReactTable'
 import { useApiResource, usePaginationQuery } from 'lib/hooks'
 import { useDialog } from 'lib/providers'
 import { Instrutor as InstrutorType } from 'lib/types'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { CellProps, Column } from 'react-table'
 
 const Instructor: React.VFC = () => {
-  const { paginationData } = usePaginationQuery<InstrutorType>('instructors')
+  const { paginationData, refetch } = usePaginationQuery<InstrutorType>('instructors')
 
   const navigate = useNavigate()
   const dialog = useDialog()
+  const { deleteApi } = useApiResource<InstrutorType>('instructors')
 
   const handleCreate = () => {
     navigate('/instructor/create')
@@ -40,18 +41,20 @@ const Instructor: React.VFC = () => {
     []
   )
 
-  const { deleteApi } = useApiResource<InstrutorType>('instructors')
-
-  const deleteConfirm = async ({ row }: CellProps<InstrutorType>) => {
-    await dialog({
-      description: 'Do you want to delete this cord?'
-    })
-    try {
-      await deleteApi(row.original.id)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const handleDelete = useCallback(
+    async ({ row }: CellProps<InstrutorType>) => {
+      await dialog({
+        description: 'Do you want to delete this cord?'
+      })
+      try {
+        await deleteApi(row.original.id)
+        refetch()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [deleteApi, refetch]
+  )
 
   return (
     <Page>
@@ -68,7 +71,7 @@ const Instructor: React.VFC = () => {
         columns={columns}
         {...paginationData}
         defaultActionEdit
-        onActionDelete={deleteConfirm}
+        onActionDelete={handleDelete}
       />
     </Page>
   )

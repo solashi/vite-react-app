@@ -35,6 +35,7 @@ const Router: React.VFC = () => {
         <Route path="/admin-user/edit/:id" element={<FormAdminUser />} />
 
         <Route path="/customer-company" element={<CustomerCompany />} />
+
         <Route path="/instructor" element={<Instructor />} />
         <Route path="/instructor/create" element={<FormInstructor />} />
         <Route path="/instructor/edit/:id" element={<FormInstructor />} />

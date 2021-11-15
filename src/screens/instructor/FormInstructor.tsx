@@ -62,8 +62,7 @@ const FormInstructor: React.VFC = () => {
       } else {
         updateInstructor.mutateAsync(values as UpdateInstructor)
       }
-
-      navigate('/admin-user')
+      navigate('/instructor')
     } catch (error) {
       if (error.errors) {
         handleValidateErrors(error, setError)
