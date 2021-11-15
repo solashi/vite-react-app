@@ -27,7 +27,7 @@ const useAuth = () => {
     localStorage.removeItem('user-token')
   }
 
-  const getUser = useAtomCallback(
+  const fetchUser = useAtomCallback(
     useCallback(
       async (get) => {
         try {
@@ -46,7 +46,7 @@ const useAuth = () => {
     )
   )
 
-  return { auth, user, logout, login, getUser, loading }
+  return { auth, user, logout, login, fetchUser, loading }
 }
 
 export { useAuth }

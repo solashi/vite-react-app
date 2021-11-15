@@ -25,12 +25,7 @@ export const TableActionContainer = <Stack onClick={(e) => e.stopPropagation()} 
 
 function TableAction<T extends Record<string, unknown>>(props: TableActionProps<T>) {
   const { row, actionConfig, onActionEdit, onActionDelete, defaultActionEdit } = props
-  const {
-    editText = '編集',
-    deleteText = '削除',
-    deleteConfirmText = 'Do you want to delete this record?',
-    needConfirm = false
-  } = actionConfig || defaultConfig
+  const { editText, deleteText, deleteConfirmText, needConfirm } = actionConfig || defaultConfig
 
   const { original } = row
   const navigate = useNavigate()

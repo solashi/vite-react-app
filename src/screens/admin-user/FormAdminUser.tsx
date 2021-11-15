@@ -2,16 +2,12 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Button, Grid, Stack } from '@mui/material'
 import { Input } from 'components/Form'
 import { Page } from 'components/Layouts'
-import {
-  CreateAdminUser,
-  createAdminUserApi,
-  UpdateAdminUser,
-  updateAdminUserApi
-} from 'lib/api/adminUser'
+import { CreateAdminUser, UpdateAdminUser } from 'lib/api/adminUser'
+import { useApiResource } from 'lib/hooks/useApiResource'
 import { AdminUser } from 'lib/types'
 import { handleValidateErrors } from 'lib/utils'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { useMutation, useQuery } from 'react-query'
+import { useQuery } from 'react-query'
 import { useNavigate, useParams } from 'react-router'
 import * as yup from 'yup'
 
@@ -37,6 +33,8 @@ const FormAdminUser: React.VFC = () => {
   const navigate = useNavigate()
   const slug = useParams()
 
+  const { createOrUpdateApi } = useApiResource<AdminUser, CreateAdminUser>('admin-users')
+
   const { control, handleSubmit, setValue, setError } = useForm<CreateAdminUser | UpdateAdminUser>({
     defaultValues: {
       id: Number(slug?.id),
@@ -55,17 +53,9 @@ const FormAdminUser: React.VFC = () => {
     enabled: !!slug?.id
   })
 
-  const createAdminUser = useMutation(createAdminUserApi)
-  const updateAdminUser = useMutation(updateAdminUserApi)
-
   const onSubmit: SubmitHandler<CreateAdminUser | UpdateAdminUser> = async (values) => {
     try {
-      if (!slug?.id) {
-        await createAdminUser.mutateAsync(values)
-      } else {
-        await updateAdminUser.mutateAsync(values as UpdateAdminUser)
-      }
-
+      await createOrUpdateApi(values)
       navigate('/admin-user')
     } catch (error) {
       if (error.errors) {

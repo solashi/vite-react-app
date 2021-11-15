@@ -28,9 +28,13 @@ export type Pagination<T> = {
   total: number
 }
 
-export type CreateResponse<T> = {
+export type ServerResponse<T> = {
+  message?: string
+  data: T
+}
+
+export type ServerError = {
   message: string
-  data: T[]
 }
 
 export type UnknownObj = Record<string, unknown>

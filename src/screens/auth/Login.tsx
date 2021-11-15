@@ -4,6 +4,7 @@ import Logo from 'assets/images/logo.png'
 import { Input } from 'components/Form'
 import { useAuth } from 'lib/hooks'
 import { UserLoginArgs, UserLoginError } from 'lib/types'
+import { handleValidateErrors } from 'lib/utils'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -30,7 +31,11 @@ const Login: React.VFC = () => {
 
   const [error, setError] = useState('')
 
-  const { control, handleSubmit } = useForm<UserLoginArgs>({
+  const {
+    control,
+    handleSubmit,
+    setError: setFormError
+  } = useForm<UserLoginArgs>({
     defaultValues: {
       email: '',
       password: ''
@@ -43,7 +48,11 @@ const Login: React.VFC = () => {
       await login(values)
       navigate('/')
     } catch (error) {
-      setError((error as UserLoginError).message)
+      if (error.message) {
+        setError((error as UserLoginError).message)
+      } else if (error.errors) {
+        handleValidateErrors(error, setFormError)
+      }
     }
   }
 
