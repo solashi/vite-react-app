@@ -9,7 +9,7 @@ import LeftHeader from './LeftHeader'
 
 const CustomerCompanyGroup: React.VFC = () => {
   const { paginationData, refetch } = usePaginationQuery<GroupType>('groups')
-  const { deleteApi } = useApiResource('groups')
+  const { deleteApi } = useApiResource<GroupType>('groups')
   const dialog = useDialog()
 
   const columns = useMemo<Column<GroupType>[]>(
@@ -21,6 +21,10 @@ const CustomerCompanyGroup: React.VFC = () => {
       {
         Header: 'グループ名',
         accessor: 'name'
+      },
+      {
+        Header: 'グループ企業数',
+        accessor: 'companies_count'
       }
     ],
     []
