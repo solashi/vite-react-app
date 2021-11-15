@@ -7,6 +7,7 @@ import { Login } from 'screens/auth'
 import { CustomerCompany } from 'screens/customer-company'
 import { Dashboard } from 'screens/dashboard'
 import { Instructor } from 'screens/instructor'
+import { FormInstructor } from 'screens/instructor/FormInstructor'
 import { NoMatch } from 'screens/NoMatch'
 import { RequireAuth } from './RequireAuth'
 
@@ -34,7 +35,10 @@ const Router: React.VFC = () => {
         <Route path="/admin-user/edit/:id" element={<FormAdminUser />} />
 
         <Route path="/customer-company" element={<CustomerCompany />} />
+
         <Route path="/instructor" element={<Instructor />} />
+        <Route path="/instructor/create" element={<FormInstructor />} />
+        <Route path="/instructor/edit/:id" element={<FormInstructor />} />
       </Route>
       <Route path="*" element={<NoMatch />} />
     </Routes>
