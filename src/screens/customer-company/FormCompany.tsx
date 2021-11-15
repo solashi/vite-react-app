@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Button, Grid, Stack, useTheme } from '@mui/material'
 import { Input } from 'components/Form'
+import { AutoComplete } from 'components/Form/AutoComplete'
 import { Page } from 'components/Layouts'
 import { useApiResource } from 'lib/hooks'
 import { CustomerCompany } from 'lib/types'
@@ -54,10 +55,13 @@ const FormCompany: React.VFC = () => {
     }
   }
 
+  console.log(getValues('invitaion_code'))
+
   return (
     <Page title={isEdit ? '企業編集' : '企業新規登録'}>
       <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
         <Stack spacing={2} mb={3}>
+          <AutoComplete name="invitaion_code" label="test" fullWidth control={control} />
           <Input fullWidth label="名前" name="name" control={control} />
           <Input fullWidth label="名前" name="address" control={control} />
           <Input
@@ -66,6 +70,7 @@ const FormCompany: React.VFC = () => {
             control={control}
             name="main_color_code"
             colorPicker
+            readOnly
           />
           <Input fullWidth label="サブカラー" control={control} name="sub_color_code" colorPicker />
         </Stack>

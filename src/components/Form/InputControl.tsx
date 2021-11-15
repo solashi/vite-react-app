@@ -4,14 +4,16 @@ import { FieldError } from 'react-hook-form'
 import { FormHelper } from './FormHelper'
 import { FormLabel } from './FormLabel'
 
-export type InputControlProps = FormControlProps & {
+export type AddControlProps = {
   helperText?: string
   label?: string
-  error: FieldError
+  fieldError?: FieldError
 }
 
+export type InputControlProps = FormControlProps<'div', AddControlProps>
+
 function InputControl({
-  error,
+  fieldError,
   fullWidth,
   label,
   helperText,
@@ -19,14 +21,14 @@ function InputControl({
   ...props
 }: InputControlProps) {
   return (
-    <FormControl fullWidth={fullWidth} error={!!error} {...props}>
+    <FormControl fullWidth={fullWidth} error={!!fieldError} {...props}>
       {label && <FormLabel>{label}</FormLabel>}
 
       {children}
 
       {helperText && <FormHelper error={false}>{helperText}</FormHelper>}
 
-      {!!error && <FormHelper error>{error?.message}</FormHelper>}
+      {!!fieldError && <FormHelper error>{fieldError?.message}</FormHelper>}
     </FormControl>
   )
 }

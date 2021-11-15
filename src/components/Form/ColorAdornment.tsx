@@ -10,9 +10,10 @@ type Props = {
 
 const ColorAdornment: React.VFC<Props> = ({ name, control, onChange }) => {
   const { _formValues } = control
+
   return (
     <InputAdornment position="start">
-      <input type="color" defaultValue={_formValues[name]} onChange={onChange} />
+      <input type="color" value={_formValues[name]} onChange={onChange} />
     </InputAdornment>
   )
 }

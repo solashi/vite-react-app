@@ -1,39 +1,25 @@
-import {
-  FormControl,
-  FormControlProps,
-  OutlinedInput,
-  outlinedInputClasses,
-  OutlinedInputProps,
-  styled
-} from '@mui/material'
+import { FormControlProps, OutlinedInputProps } from '@mui/material'
 import { Control, useController, UseControllerProps } from 'react-hook-form'
 import { ColorAdornment } from './ColorAdornment'
-import { FormHelper } from './FormHelper'
-import { FormLabel } from './FormLabel'
+import InputControl, { AddControlProps } from './InputControl'
+import { InputStyled } from './InputStyled'
 
 export type InputProps<T> = UseControllerProps<T> &
-  OutlinedInputProps & {
-    controlProps?: FormControlProps
-    helperText?: string
+  OutlinedInputProps &
+  AddControlProps & {
     colorPicker?: boolean
+    controlProps?: FormControlProps
   }
-
-const InputStyled = styled(OutlinedInput)(({ theme }) => ({
-  [`&.${outlinedInputClasses.disabled}`]: {
-    backgroundColor: theme.palette.grey[300]
-  }
-}))
 
 function Input<T>({
   name,
   control,
   defaultValue,
   fullWidth,
-  controlProps,
   label,
   helperText,
   colorPicker,
-  readOnly,
+  controlProps,
   ...props
 }: InputProps<T>) {
   const {
@@ -42,14 +28,16 @@ function Input<T>({
   } = useController({ name, control, defaultValue })
 
   return (
-    <FormControl fullWidth={fullWidth} error={!!error} {...controlProps}>
-      {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-
+    <InputControl
+      fieldError={error}
+      fullWidth={fullWidth}
+      label={label}
+      helperText={helperText}
+      {...controlProps}
+    >
       <InputStyled
-        autoComplete="off"
         {...inputProps}
         {...props}
-        readOnly={colorPicker || readOnly}
         startAdornment={
           colorPicker ? (
             <ColorAdornment
@@ -61,19 +49,7 @@ function Input<T>({
         }
         inputRef={ref}
       />
-
-      {helperText && (
-        <FormHelper id={name} error={false}>
-          {helperText}
-        </FormHelper>
-      )}
-
-      {!!error && (
-        <FormHelper id={name} error>
-          {error?.message}
-        </FormHelper>
-      )}
-    </FormControl>
+    </InputControl>
   )
 }
 
