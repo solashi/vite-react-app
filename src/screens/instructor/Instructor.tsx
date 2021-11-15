@@ -3,23 +3,23 @@ import { Page } from 'components/Layouts'
 import { ReactTable } from 'components/ReactTable'
 import { useApiResource, usePaginationQuery } from 'lib/hooks'
 import { useDialog } from 'lib/providers'
-import { Instrutor as InstrutorType } from 'lib/types'
+import { Instructor as InstructorType } from 'lib/types'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { CellProps, Column } from 'react-table'
 
 const Instructor: React.VFC = () => {
-  const { paginationData, refetch } = usePaginationQuery<InstrutorType>('instructors')
+  const { paginationData, refetch } = usePaginationQuery<InstructorType>('instructors')
 
   const navigate = useNavigate()
   const dialog = useDialog()
-  const { deleteApi } = useApiResource<InstrutorType>('instructors')
+  const { deleteApi } = useApiResource<InstructorType>('instructors')
 
   const handleCreate = () => {
     navigate('/instructor/create')
   }
 
-  const columns = useMemo<Column<InstrutorType>[]>(
+  const columns = useMemo<Column<InstructorType>[]>(
     () => [
       {
         Header: 'ID',
@@ -42,7 +42,7 @@ const Instructor: React.VFC = () => {
   )
 
   const handleDelete = useCallback(
-    async ({ row }: CellProps<InstrutorType>) => {
+    async ({ row }: CellProps<InstructorType>) => {
       await dialog({
         description: 'Do you want to delete this cord?'
       })

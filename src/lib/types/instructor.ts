@@ -1,4 +1,4 @@
-export type Instrutor = {
+export type Instructor = {
   id: number
   name: string
   name_en: string
