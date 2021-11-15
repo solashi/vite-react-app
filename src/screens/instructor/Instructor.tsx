@@ -1,7 +1,7 @@
 import { Box, Button, Stack, Typography } from '@mui/material'
 import { Page } from 'components/Layouts'
 import { ReactTable } from 'components/ReactTable'
-import { usePaginationQuery } from 'lib/hooks'
+import { useApiResource, usePaginationQuery } from 'lib/hooks'
 import { useDialog } from 'lib/providers'
 import { Instrutor as InstrutorType } from 'lib/types'
 import { useMemo } from 'react'
@@ -40,12 +40,14 @@ const Instructor: React.VFC = () => {
     []
   )
 
+  const { deleteApi } = useApiResource<InstrutorType>('instructors')
+
   const deleteConfirm = async ({ row }: CellProps<InstrutorType>) => {
     await dialog({
       description: 'Do you want to delete this cord?'
     })
     try {
-      console.log(row.original.id)
+      await deleteApi(row.original.id)
     } catch (error) {
       console.log(error)
     }
