@@ -40,6 +40,10 @@ const sidebarAdmin = [
     path: '/event'
   },
   {
+    label: 'イベント講師管理',
+    path: '/instructor'
+  },
+  {
     label: 'コンシェルジュ管理',
     path: '/concierge'
   },
