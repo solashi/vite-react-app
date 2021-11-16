@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Button, Grid, Stack, useTheme } from '@mui/material'
-import { Input, Select } from 'components/Form'
+import { Input, RawInput, Select } from 'components/Form'
 import { Page } from 'components/Layouts'
-import { useApiResource } from 'lib/hooks'
+import { FileBag, useApiResource, useUploader } from 'lib/hooks'
 import { CustomerCompany, GroupType, ServiceType } from 'lib/types'
 import { handleValidateErrors } from 'lib/utils'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -30,26 +30,25 @@ const FormCompany: React.VFC = () => {
   const { createOrUpdateApi } = useApiResource<CustomerCompany>('companies')
   const isEdit = !!params?.id
 
-  const { control, handleSubmit, setError, setValue, getValues, register } =
-    useForm<CreateCompanyType>({
-      defaultValues: {
-        id: Number(params?.id) || undefined,
-        name: '',
-        address: '',
-        invitation_code: '',
-        main_color_code: theme.palette.primary.main,
-        sub_color_code: theme.palette.secondary.main,
-        logo_path: '',
-        privacy_policy_text: '',
-        service_policy_text: '',
-        parent_company_id: undefined,
-        fd_company_id: -1,
-        group_ids: [],
-        service_ids: [],
-        domains: []
-      },
-      resolver: yupResolver(validateAdminUser)
-    })
+  const { control, handleSubmit, setError, setValue } = useForm<CreateCompanyType>({
+    defaultValues: {
+      id: Number(params?.id) || undefined,
+      name: '',
+      address: '',
+      invitation_code: '',
+      main_color_code: theme.palette.primary.main,
+      sub_color_code: theme.palette.secondary.main,
+      logo_path: '',
+      privacy_policy_text: '',
+      service_policy_text: '',
+      parent_company_id: undefined,
+      fd_company_id: -1,
+      group_ids: [],
+      service_ids: [],
+      domains: []
+    },
+    resolver: yupResolver(validateAdminUser)
+  })
 
   const onSubmit: SubmitHandler<CustomerCompany> = async (values) => {
     try {
@@ -61,6 +60,20 @@ const FormCompany: React.VFC = () => {
         handleValidateErrors(error, setError)
       }
     }
+  }
+
+  const { onDrop } = useUploader({
+    config: {
+      url: 'upload'
+    },
+    onUploaded: (file: FileBag) => {
+      setValue('logo_path', file.responseData.link as string)
+    }
+  })
+
+  const handleChooseImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const target = event.target as HTMLInputElement
+    onDrop(target.files as FileList)
   }
 
   return (
@@ -113,6 +126,12 @@ const FormCompany: React.VFC = () => {
             control={control}
             multiple
             query="services"
+          />
+
+          <RawInput
+            label="サービスロゴ（上書きの場合アップロード）"
+            type="file"
+            onChange={handleChooseImage}
           />
         </Stack>
 

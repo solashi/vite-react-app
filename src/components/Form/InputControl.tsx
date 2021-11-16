@@ -7,7 +7,7 @@ import { FormLabel } from './FormLabel'
 export type AddControlProps = {
   helperText?: string
   label?: string
-  fieldError?: FieldError
+  fieldError?: FieldError | boolean
 }
 
 export type InputControlProps = FormControlProps<'div', AddControlProps>
@@ -28,7 +28,11 @@ function InputControl({
 
       {helperText && <FormHelper error={false}>{helperText}</FormHelper>}
 
-      {!!fieldError && <FormHelper error>{fieldError?.message}</FormHelper>}
+      {!!fieldError && (
+        <FormHelper error>
+          {typeof fieldError === 'boolean' ? helperText : fieldError?.message}
+        </FormHelper>
+      )}
     </FormControl>
   )
 }

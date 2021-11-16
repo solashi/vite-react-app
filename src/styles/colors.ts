@@ -1,4 +1,5 @@
 const grey = {
+  50: '#f4f4f4',
   100: '#e0e0e0',
   200: '#dcdfe6',
   300: '#bfc2cc',
@@ -33,7 +34,7 @@ const blue = {
 }
 
 const yellow = {
-  600: '#ffef42',
+  600: '#ffee00',
   300: '#fffde5'
 }
 
