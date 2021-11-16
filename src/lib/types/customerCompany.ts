@@ -2,7 +2,7 @@ type CustomerCompany = {
   id: number
   name: string
   address: string
-  invitaion_code: string
+  invitation_code: string
   main_color_code: string
   sub_color_code: string
   logo_path: string

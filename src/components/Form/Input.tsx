@@ -1,60 +1,57 @@
-import {
-  FormControl,
-  FormControlProps,
-  OutlinedInput,
-  outlinedInputClasses,
-  OutlinedInputProps,
-  styled
-} from '@mui/material'
-import { useController, UseControllerProps } from 'react-hook-form'
-import { FormHelper } from './FormHelper'
-import { FormLabel } from './FormLabel'
+import { FormControlProps, OutlinedInputProps } from '@mui/material'
+import { Control, useController, UseControllerProps } from 'react-hook-form'
+import { ColorAdornment } from './ColorAdornment'
+import InputControl, { AddControlProps } from './InputControl'
+import { InputStyled } from './InputStyled'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type InputProps = UseControllerProps<any> &
-  OutlinedInputProps & {
+export type InputProps = UseControllerProps<any> &
+  OutlinedInputProps &
+  AddControlProps & {
+    colorPicker?: boolean
     controlProps?: FormControlProps
-    helperText?: string
   }
 
-const InputStyled = styled(OutlinedInput)(({ theme }) => ({
-  [`&.${outlinedInputClasses.disabled}`]: {
-    backgroundColor: theme.palette.grey[300]
-  }
-}))
-
-const Input: React.FC<InputProps> = ({
+function Input({
   name,
   control,
   defaultValue,
   fullWidth,
-  controlProps,
   label,
   helperText,
+  colorPicker,
+  controlProps,
   ...props
-}) => {
+}: InputProps) {
   const {
     field: { ref, ...inputProps },
     fieldState: { error }
   } = useController({ name, control, defaultValue })
 
   return (
-    <FormControl fullWidth={fullWidth} error={!!error} {...controlProps}>
-      {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-
-      <InputStyled {...inputProps} {...props} inputRef={ref} />
-      {helperText && (
-        <FormHelper id={name} error={false}>
-          {helperText}
-        </FormHelper>
-      )}
-
-      {!!error && (
-        <FormHelper id={name} error>
-          {error?.message}
-        </FormHelper>
-      )}
-    </FormControl>
+    <InputControl
+      fieldError={error}
+      fullWidth={fullWidth}
+      label={label}
+      helperText={helperText}
+      {...controlProps}
+    >
+      <InputStyled
+        {...inputProps}
+        {...props}
+        startAdornment={
+          colorPicker ? (
+            <ColorAdornment
+              name={name}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              control={control as Control<any, object>}
+              onChange={inputProps.onChange}
+            />
+          ) : null
+        }
+        inputRef={ref}
+      />
+    </InputControl>
   )
 }
 
