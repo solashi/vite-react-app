@@ -3,7 +3,11 @@ import { Pagination } from 'lib/types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 
-function usePaginationQuery<T>(endpoint: string, params?: Record<string, unknown>) {
+function usePaginationQuery<T>(
+  endpoint: string,
+  params?: Record<string, unknown>,
+  enabled?: boolean
+) {
   const [meta, setMeta] = useState<PaginationMeta>({
     page: 1,
     per_page: 10
@@ -15,7 +19,8 @@ function usePaginationQuery<T>(endpoint: string, params?: Record<string, unknown
     [endpoint, { ...meta, ...params }],
     {
       keepPreviousData: true,
-      staleTime: 10000
+      staleTime: 10000,
+      enabled
     }
   )
 
