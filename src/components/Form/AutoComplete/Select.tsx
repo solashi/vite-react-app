@@ -9,9 +9,8 @@ import { useSelectQuery } from 'lib/hooks'
 import { UnknownObj } from 'lib/types'
 import { SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useController, UseControllerProps } from 'react-hook-form'
-import { Tag } from '../components'
-import InputControl, { AddControlProps } from '../InputControl'
-import { InputStyled } from '../InputStyled'
+import { AddControlProps, InputControl, Tag } from '../components'
+import { InputStyled } from '../components/InputStyled'
 
 export type SelectOption = {
   label: string

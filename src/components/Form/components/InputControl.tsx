@@ -12,7 +12,7 @@ export type AddControlProps = {
 
 export type InputControlProps = FormControlProps<'div', AddControlProps>
 
-function InputControl({
+function RawInputControl({
   fieldError,
   fullWidth,
   label,
@@ -37,4 +37,6 @@ function InputControl({
   )
 }
 
-export default memo(InputControl) as typeof InputControl
+const InputControl = memo(RawInputControl) as typeof RawInputControl
+
+export { InputControl }

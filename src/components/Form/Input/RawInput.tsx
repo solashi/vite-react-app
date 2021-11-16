@@ -1,7 +1,7 @@
 import { FormControlProps, InputBase, OutlinedInputProps } from '@mui/material'
 import { FieldError } from 'react-hook-form'
-import InputControl, { AddControlProps } from './InputControl'
-import { InputStyled } from './InputStyled'
+import { AddControlProps, InputControl } from '..'
+import { InputStyled } from '../components/InputStyled'
 
 export type RawInputProps = OutlinedInputProps &
   AddControlProps & {

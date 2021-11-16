@@ -1,28 +1,24 @@
-import { FormControlProps, OutlinedInputProps } from '@mui/material'
+import { FormControlProps, InputBase, InputBaseProps } from '@mui/material'
 import { Control, useController, UseControllerProps } from 'react-hook-form'
-import { ColorAdornment } from './ColorAdornment'
-import InputControl, { AddControlProps } from './InputControl'
-import { InputStyled } from './InputStyled'
+import { AddControlProps, ColorAdornment, InputControl } from '..'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type InputProps = UseControllerProps<any> &
-  OutlinedInputProps &
+export type InputColorProps = UseControllerProps<any> &
+  InputBaseProps &
   AddControlProps & {
-    colorPicker?: boolean
     controlProps?: FormControlProps
   }
 
-function Input({
+function InputColor({
   name,
   control,
   defaultValue,
   fullWidth,
   label,
   helperText,
-  colorPicker,
   controlProps,
   ...props
-}: InputProps) {
+}: InputColorProps) {
   const {
     field: { ref, ...inputProps },
     fieldState: { error }
@@ -36,18 +32,16 @@ function Input({
       helperText={helperText}
       {...controlProps}
     >
-      <InputStyled
+      <InputBase
         {...inputProps}
         {...props}
         startAdornment={
-          colorPicker ? (
-            <ColorAdornment
-              name={name}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              control={control as Control<any, object>}
-              onChange={inputProps.onChange}
-            />
-          ) : null
+          <ColorAdornment
+            name={name}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            control={control as Control<any, object>}
+            onChange={inputProps.onChange}
+          />
         }
         inputRef={ref}
       />
@@ -55,4 +49,4 @@ function Input({
   )
 }
 
-export { Input }
+export { InputColor }

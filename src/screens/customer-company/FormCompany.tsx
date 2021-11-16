@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Button, Grid, Stack, useTheme } from '@mui/material'
-import { Input, RawInput, Select } from 'components/Form'
+import { Input, InputColor, RawInput, Select } from 'components/Form'
 import { Page } from 'components/Layouts'
 import { FileBag, useApiResource, useUploader } from 'lib/hooks'
 import { CustomerCompany, GroupType, ServiceType } from 'lib/types'
@@ -92,22 +92,20 @@ const FormCompany: React.VFC = () => {
             query="companies"
           />
 
-          <Input
+          <InputColor
             fullWidth
             label="メインカラー"
             control={control}
             name="main_color_code"
-            colorPicker
             readOnly
           />
 
-          <Input
+          <InputColor
             fullWidth
             label="招待コード"
             control={control}
             name="sub_color_code"
             readOnly
-            colorPicker
           />
 
           <Select<GroupType>
@@ -131,6 +129,7 @@ const FormCompany: React.VFC = () => {
           <RawInput
             label="サービスロゴ（上書きの場合アップロード）"
             type="file"
+            variant="base"
             onChange={handleChooseImage}
           />
         </Stack>
