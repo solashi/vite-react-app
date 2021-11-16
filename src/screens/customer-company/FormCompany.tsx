@@ -1,10 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Button, Grid, Stack, useTheme } from '@mui/material'
-import { Input } from 'components/Form'
-import { AutoComplete } from 'components/Form/AutoComplete'
+import { Input, Select } from 'components/Form'
 import { Page } from 'components/Layouts'
 import { useApiResource } from 'lib/hooks'
-import { CustomerCompany } from 'lib/types'
+import { CustomerCompany, GroupType, ServiceType } from 'lib/types'
 import { handleValidateErrors } from 'lib/utils'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -17,6 +16,12 @@ const validateAdminUser = yup
   })
   .required()
 
+export type CreateCompanyType = CustomerCompany & {
+  group_ids: number[]
+  service_ids: number[]
+  domains: string[]
+}
+
 const FormCompany: React.VFC = () => {
   const navigate = useNavigate()
   const params = useParams()
@@ -26,19 +31,22 @@ const FormCompany: React.VFC = () => {
   const isEdit = !!params?.id
 
   const { control, handleSubmit, setError, setValue, getValues, register } =
-    useForm<CustomerCompany>({
+    useForm<CreateCompanyType>({
       defaultValues: {
         id: Number(params?.id) || undefined,
         name: '',
         address: '',
-        invitaion_code: '',
+        invitation_code: '',
         main_color_code: theme.palette.primary.main,
         sub_color_code: theme.palette.secondary.main,
         logo_path: '',
         privacy_policy_text: '',
         service_policy_text: '',
-        parent_company_id: -1,
-        fd_company_id: -1
+        parent_company_id: undefined,
+        fd_company_id: -1,
+        group_ids: [],
+        service_ids: [],
+        domains: []
       },
       resolver: yupResolver(validateAdminUser)
     })
@@ -55,15 +63,22 @@ const FormCompany: React.VFC = () => {
     }
   }
 
-  console.log(getValues('invitaion_code'))
-
   return (
     <Page title={isEdit ? '企業編集' : '企業新規登録'}>
       <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
         <Stack spacing={2} mb={3}>
-          <AutoComplete name="invitaion_code" label="test" fullWidth control={control} />
           <Input fullWidth label="名前" name="name" control={control} />
           <Input fullWidth label="名前" name="address" control={control} />
+          <Input fullWidth label="サブカラー" control={control} name="invitation_code" />
+
+          <Select<CustomerCompany>
+            name="parent_company_id"
+            label="親会社"
+            fullWidth
+            control={control}
+            query="companies"
+          />
+
           <Input
             fullWidth
             label="メインカラー"
@@ -72,7 +87,33 @@ const FormCompany: React.VFC = () => {
             colorPicker
             readOnly
           />
-          <Input fullWidth label="サブカラー" control={control} name="sub_color_code" colorPicker />
+
+          <Input
+            fullWidth
+            label="招待コード"
+            control={control}
+            name="sub_color_code"
+            readOnly
+            colorPicker
+          />
+
+          <Select<GroupType>
+            name="group_ids"
+            label="グループ"
+            fullWidth
+            control={control}
+            multiple
+            query="groups"
+          />
+
+          <Select<ServiceType>
+            name="service_ids"
+            label="利用可能サービス"
+            fullWidth
+            control={control}
+            multiple
+            query="services"
+          />
         </Stack>
 
         <Grid container justifyContent="center">
