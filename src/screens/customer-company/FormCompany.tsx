@@ -99,6 +99,24 @@ const FormCompany: React.VFC = () => {
 
           <Input fullWidth label="招待コード" control={control} name="invitation_code" />
 
+          <Select<GroupType>
+            name="groups"
+            label="グループ"
+            fullWidth
+            control={control}
+            multiple
+            query="groups"
+          />
+
+          <Select<ServiceType>
+            name="services"
+            label="利用可能サービス"
+            fullWidth
+            control={control}
+            multiple
+            query="services"
+          />
+
           <Select<CustomerCompany>
             name="parent_company_id"
             label="親会社"
@@ -117,28 +135,10 @@ const FormCompany: React.VFC = () => {
 
           <InputColor
             fullWidth
-            label="招待コード"
+            label="サブカラー"
             control={control}
             name="sub_color_code"
             readOnly
-          />
-
-          <Select<GroupType>
-            name="groups"
-            label="グループ"
-            fullWidth
-            control={control}
-            multiple
-            query="groups"
-          />
-
-          <Select<ServiceType>
-            name="services"
-            label="利用可能サービス"
-            fullWidth
-            control={control}
-            multiple
-            query="services"
           />
 
           <RawInput

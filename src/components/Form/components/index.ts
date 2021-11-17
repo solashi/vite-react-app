@@ -1,4 +1,5 @@
 export * from './ColorAdornment'
+export * from './FormDetail'
 export * from './FormHelper'
 export * from './FormLabel'
 export * from './InputControl'

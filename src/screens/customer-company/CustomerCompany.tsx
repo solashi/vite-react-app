@@ -1,9 +1,10 @@
 import { Page } from 'components/Layouts'
 import { ActionColumnConfig, ReactTable } from 'components/ReactTable'
 import { useApiResource, usePaginationQuery } from 'lib/hooks'
-import { CustomerCompany as Company } from 'lib/types'
+import { Company } from 'lib/types'
 import { useCallback, useMemo } from 'react'
-import { CellProps, Column } from 'react-table'
+import { useNavigate } from 'react-router-dom'
+import { CellProps, Column, Row } from 'react-table'
 import LeftHeader from './LeftHeader'
 
 const actionConfig: ActionColumnConfig = {
@@ -13,6 +14,7 @@ const actionConfig: ActionColumnConfig = {
 const CustomerCompany: React.VFC = () => {
   const { paginationData, refetch } = usePaginationQuery<Company>('companies')
   const { deleteApi } = useApiResource('companies')
+  const navigate = useNavigate()
 
   const columns = useMemo<Column<Company>[]>(
     () => [
@@ -40,6 +42,10 @@ const CustomerCompany: React.VFC = () => {
     [deleteApi, refetch]
   )
 
+  const onRowClick = ({ original }: Row<Company>) => {
+    navigate('/customer-company/' + original.id)
+  }
+
   return (
     <Page title="企業一覧" leftHeader={<LeftHeader />}>
       <ReactTable<Company>
@@ -47,6 +53,7 @@ const CustomerCompany: React.VFC = () => {
         defaultActionEdit
         actionConfig={actionConfig}
         onActionDelete={handleDelete}
+        onRowClick={onRowClick}
         {...paginationData}
       />
     </Page>
