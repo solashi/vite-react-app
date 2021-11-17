@@ -17,6 +17,7 @@
     "@hookform/resolvers": "^2.8.3",
     "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.0.6",
+    "@tinymce/tinymce-react": "^3.13.0",
     "axios": "^0.24.0",
     "history": "5",
     "jotai": "^1.4.2",
