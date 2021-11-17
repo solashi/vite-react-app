@@ -66,7 +66,7 @@ function Select<T extends UnknownObj>({
   const [inputValue, setInputValue] = useState('')
 
   const queryParams = useMemo(() => {
-    if (!queryFilter && !addQueryFilter) return
+    if (!queryFilter && !addQueryFilter) return { per_page: 1000 }
     const inputParams = inputValue && queryFilter ? { [queryFilter]: inputValue } : undefined
 
     return { per_page: 1000, ...inputParams, ...addQueryFilter }
