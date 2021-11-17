@@ -25,7 +25,12 @@ const validateAdminUser = yup
       .matches(
         /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
         'パスワードは半角英数字を混ぜたものを指定してください。'
-      )
+      ),
+    confirm_password: yup
+      .string()
+      .test('passwords-match', 'パスワードが一致しません', function (value) {
+        return this.parent.password === value
+      })
   })
   .required()
 
@@ -73,6 +78,14 @@ const FormAdminUser: React.VFC = () => {
           <Input fullWidth label="名前" name="email" control={control} />
 
           <Input fullWidth label="パスワード" name="password" type="password" control={control} />
+
+          <Input
+            fullWidth
+            label="パスワードの確認"
+            name="confirm_password"
+            type="password"
+            control={control}
+          />
         </Stack>
 
         <Grid container justifyContent="center">

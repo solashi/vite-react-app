@@ -2,15 +2,16 @@ import { Button, Stack, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { Page } from 'components/Layouts'
 import { ReactTable } from 'components/ReactTable'
-import { usePaginationQuery } from 'lib/hooks'
+import { useApiResource, usePaginationQuery } from 'lib/hooks'
 import { useDialog } from 'lib/providers'
 import { AdminUser as UserType } from 'lib/types'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { CellProps, Column } from 'react-table'
 
 const AdminUser: React.VFC = () => {
-  const { paginationData } = usePaginationQuery<UserType>('admin-users')
+  const { paginationData, refetch } = usePaginationQuery<UserType>('admin-users')
+  const { deleteApi } = useApiResource<UserType>('admin-users')
 
   const navigate = useNavigate()
 
@@ -38,16 +39,20 @@ const AdminUser: React.VFC = () => {
 
   const dialog = useDialog()
 
-  const deleteConfirm = async ({ row }: CellProps<UserType>) => {
-    await dialog({
-      description: 'Do you want to delete this cord?'
-    })
-    try {
-      console.log(row.original.id)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const handleDelete = useCallback(
+    async ({ row }: CellProps<UserType>) => {
+      await dialog({
+        description: 'Do you want to delete this cord?'
+      })
+      try {
+        await deleteApi(row.original.id)
+        refetch()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [deleteApi, refetch]
+  )
 
   return (
     <Page>
@@ -66,7 +71,7 @@ const AdminUser: React.VFC = () => {
         columns={columns}
         {...paginationData}
         defaultActionEdit
-        onActionDelete={deleteConfirm}
+        onActionDelete={handleDelete}
       />
     </Page>
   )
