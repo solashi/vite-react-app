@@ -49,25 +49,12 @@ function useUploader({ config, getConfig, onUploaded, onFailed }: FileUploaderPr
         setFileBags([...fileBags])
         return fileBags[index]
       }
-
-      const newFileBag: FileBag = {
-        id,
-        file: data.file as File,
-        progress: 0,
-        formattedSize: String(data.file?.size),
-        status: 'initial',
-        responseData: {}
-      }
-
-      setFileBags((_bag) => [..._bag, newFileBag])
-      return newFileBag
     },
     [fileBags]
   )
 
   const uploadFile = useCallback(
     async (file: File, id = new Date().getTime()) => {
-      updateFileBag(id, { file })
       const formData = new FormData()
       formData.append('file', file)
 

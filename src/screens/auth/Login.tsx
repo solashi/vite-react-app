@@ -12,8 +12,11 @@ import * as yup from 'yup'
 
 const validateSchema = yup
   .object({
-    email: yup.string().email().required(),
-    password: yup.string().required()
+    email: yup
+      .string()
+      .email('メールアドレスが正しい形式ではありません。')
+      .required('メールアドレスは必須入力です。'),
+    password: yup.string().required('パスワードは必須入力です。')
   })
   .required()
 

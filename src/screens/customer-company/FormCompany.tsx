@@ -1,11 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Button, Grid, Stack, useTheme } from '@mui/material'
-import { Input, InputColor, RawInput, Select } from 'components/Form'
+import { Input, InputColor, InputTag, RawInput, Select } from 'components/Form'
 import { Page } from 'components/Layouts'
 import { FileBag, useApiResource, useUploader } from 'lib/hooks'
 import { CustomerCompany, GroupType, ServiceType } from 'lib/types'
-import { handleValidateErrors } from 'lib/utils'
+import { handleValidateErrors, setFormValues } from 'lib/utils'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { useQuery } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import * as yup from 'yup'
 
@@ -16,12 +17,6 @@ const validateAdminUser = yup
   })
   .required()
 
-export type CreateCompanyType = CustomerCompany & {
-  group_ids: number[]
-  service_ids: number[]
-  domains: string[]
-}
-
 const FormCompany: React.VFC = () => {
   const navigate = useNavigate()
   const params = useParams()
@@ -30,7 +25,7 @@ const FormCompany: React.VFC = () => {
   const { createOrUpdateApi } = useApiResource<CustomerCompany>('companies')
   const isEdit = !!params?.id
 
-  const { control, handleSubmit, setError, setValue } = useForm<CreateCompanyType>({
+  const { control, handleSubmit, setError, setValue } = useForm<CustomerCompany>({
     defaultValues: {
       id: Number(params?.id) || undefined,
       name: '',
@@ -42,7 +37,7 @@ const FormCompany: React.VFC = () => {
       privacy_policy_text: '',
       service_policy_text: '',
       parent_company_id: undefined,
-      fd_company_id: -1,
+      fd_company_id: undefined,
       group_ids: [],
       service_ids: [],
       domains: []
@@ -50,11 +45,17 @@ const FormCompany: React.VFC = () => {
     resolver: yupResolver(validateAdminUser)
   })
 
+  useQuery<CustomerCompany>([`admin-users/${params?.id}`], {
+    onSuccess: (data) => {
+      setFormValues(data, setValue)
+    },
+    enabled: isEdit
+  })
+
   const onSubmit: SubmitHandler<CustomerCompany> = async (values) => {
     try {
-      console.log(values)
-      //   await createOrUpdateApi(values)
-      //   navigate('/companies')
+      await createOrUpdateApi(values)
+      navigate('/companies')
     } catch (error) {
       if (error.errors) {
         handleValidateErrors(error, setError)
@@ -82,7 +83,9 @@ const FormCompany: React.VFC = () => {
         <Stack spacing={2} mb={3}>
           <Input fullWidth label="名前" name="name" control={control} />
           <Input fullWidth label="名前" name="address" control={control} />
-          <Input fullWidth label="サブカラー" control={control} name="invitation_code" />
+          <InputTag name="domains" label="ユーザー登録可能ドメイン" fullWidth control={control} />
+
+          <Input fullWidth label="招待コード" control={control} name="invitation_code" />
 
           <Select<CustomerCompany>
             name="parent_company_id"
@@ -131,6 +134,30 @@ const FormCompany: React.VFC = () => {
             type="file"
             variant="base"
             onChange={handleChooseImage}
+          />
+
+          <Input
+            fullWidth
+            label="個人情報の取扱い（上書きの場合アップデート）"
+            name="privacy_policy_text"
+            control={control}
+            multiline
+            rows={6}
+            sx={{
+              width: 600
+            }}
+          />
+
+          <Input
+            fullWidth
+            label="利用にあたっての留意事項（上書きの場合アップデート）"
+            name="service_policy_text"
+            control={control}
+            multiline
+            rows={6}
+            sx={{
+              width: 600
+            }}
           />
         </Stack>
 
