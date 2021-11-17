@@ -4,7 +4,7 @@ import { useAuth } from 'lib/hooks'
 import { Route, Routes } from 'react-router-dom'
 import { AdminUser, FormAdminUser } from 'screens/admin-user'
 import { Login } from 'screens/auth'
-import { CustomerCompany, FormCompany } from 'screens/customer-company'
+import { CompanyDetail, CustomerCompany, FormCompany } from 'screens/customer-company'
 import { CustomerCompanyGroup } from 'screens/customer-company-group'
 import { Dashboard } from 'screens/dashboard'
 import { Instructor } from 'screens/instructor'
@@ -38,6 +38,7 @@ const Router: React.VFC = () => {
         <Route path="/customer-company" element={<CustomerCompany />} />
         <Route path="/customer-company/create" element={<FormCompany />} />
         <Route path="/customer-company/edit/:id" element={<FormCompany />} />
+        <Route path="/customer-company/:id" element={<CompanyDetail />} />
 
         <Route path="/instructor" element={<Instructor />} />
         <Route path="/instructor/create" element={<FormInstructor />} />
