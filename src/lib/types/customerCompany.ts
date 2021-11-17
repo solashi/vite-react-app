@@ -10,6 +10,9 @@ type CustomerCompany = {
   service_policy_text: string
   parent_company_id?: number
   fd_company_id?: number
+  group_ids: number[]
+  service_ids: number[]
+  domains: string[]
 }
 
 export type { CustomerCompany }

@@ -116,6 +116,7 @@ function Select<T extends UnknownObj>({
       onChange(_value)
     } else {
       onChange((newValue as SelectOption).value)
+      setInputValue((newValue as SelectOption).label)
     }
 
     setValue(newValue)
