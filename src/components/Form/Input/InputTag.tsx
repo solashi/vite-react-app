@@ -37,6 +37,15 @@ function InputTag({
     onChange(newValue)
   }
 
+  const handleBlur = () => {
+    const trimmedInput = String(inputRef.current?.value || '').trim()
+    if (trimmedInput) {
+      onChange([...value, trimmedInput])
+      ;(inputRef.current as HTMLInputElement).value = ''
+    }
+    onBlur()
+  }
+
   return (
     <InputControl
       fieldError={error}
@@ -46,7 +55,7 @@ function InputTag({
       {...controlProps}
     >
       <InputStyled
-        onBlur={onBlur}
+        onBlur={handleBlur}
         {...props}
         onKeyDown={onKeyDown}
         startAdornment={

@@ -3,8 +3,8 @@ import { Box, Button, Grid, Stack, useTheme } from '@mui/material'
 import { Input, InputColor, InputTag, RawInput, Select } from 'components/Form'
 import { Page } from 'components/Layouts'
 import { FileBag, useApiResource, useUploader } from 'lib/hooks'
-import { CustomerCompany, GroupType, ServiceType } from 'lib/types'
-import { handleValidateErrors, setFormValues } from 'lib/utils'
+import { Company, CustomerCompany, Domain, GroupType, ServiceType } from 'lib/types'
+import { handleValidateErrors } from 'lib/utils'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useQuery } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -22,10 +22,10 @@ const FormCompany: React.VFC = () => {
   const params = useParams()
   const theme = useTheme()
 
-  const { createOrUpdateApi } = useApiResource<CustomerCompany>('companies')
+  const { createOrUpdateApi } = useApiResource<Company>('companies')
   const isEdit = !!params?.id
 
-  const { control, handleSubmit, setError, setValue } = useForm<CustomerCompany>({
+  const { control, handleSubmit, setError, setValue } = useForm<Company>({
     defaultValues: {
       id: Number(params?.id) || undefined,
       name: '',
@@ -38,24 +38,36 @@ const FormCompany: React.VFC = () => {
       service_policy_text: '',
       parent_company_id: undefined,
       fd_company_id: undefined,
-      group_ids: [],
-      service_ids: [],
+      groups: [],
+      services: [],
       domains: []
     },
     resolver: yupResolver(validateAdminUser)
   })
 
-  useQuery<CustomerCompany>([`admin-users/${params?.id}`], {
+  useQuery<Company>([`companies/${params?.id}`], {
     onSuccess: (data) => {
-      setFormValues(data, setValue)
+      const instanceKeys: Array<keyof Company> = ['groups', 'services', 'domains']
+      for (const name in data) {
+        if (instanceKeys.includes(name as keyof Company)) {
+          setValue(
+            name as keyof Company,
+            (data[name as keyof Company] as GroupType[] | ServiceType[] | Domain[])?.map((el) =>
+              name === 'domains' ? (el as Domain).domain : el.id
+            ) as Company['groups']
+          )
+        } else {
+          setValue(name as keyof Company, data[name as keyof Company])
+        }
+      }
     },
     enabled: isEdit
   })
 
-  const onSubmit: SubmitHandler<CustomerCompany> = async (values) => {
+  const onSubmit: SubmitHandler<Company> = async (values) => {
     try {
       await createOrUpdateApi(values)
-      navigate('/companies')
+      navigate('/customer-company')
     } catch (error) {
       if (error.errors) {
         handleValidateErrors(error, setError)
@@ -112,7 +124,7 @@ const FormCompany: React.VFC = () => {
           />
 
           <Select<GroupType>
-            name="group_ids"
+            name="groups"
             label="グループ"
             fullWidth
             control={control}
@@ -121,7 +133,7 @@ const FormCompany: React.VFC = () => {
           />
 
           <Select<ServiceType>
-            name="service_ids"
+            name="services"
             label="利用可能サービス"
             fullWidth
             control={control}

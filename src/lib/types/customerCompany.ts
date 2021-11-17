@@ -1,3 +1,5 @@
+import { Domain, GroupType, ServiceType } from '.'
+
 type CustomerCompany = {
   id: number
   name: string
@@ -10,9 +12,14 @@ type CustomerCompany = {
   service_policy_text: string
   parent_company_id?: number
   fd_company_id?: number
-  group_ids: number[]
-  service_ids: number[]
-  domains: string[]
 }
 
-export type { CustomerCompany }
+type CompanyRelation = {
+  groups: GroupType[] | number[]
+  services: ServiceType[] | number[]
+  domains: Domain[] | string[]
+}
+
+type Company = CustomerCompany & CompanyRelation
+
+export type { CustomerCompany, CompanyRelation, Company }

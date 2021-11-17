@@ -1,6 +1,7 @@
 export * from './auth'
 export * from './companyGroup'
 export * from './customerCompany'
+export * from './domain'
 export * from './group'
 export * from './instructor'
 export * from './service'
