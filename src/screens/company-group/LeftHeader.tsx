@@ -6,7 +6,7 @@ const LeftHeader = () => {
   const navigate = useNavigate()
 
   const onCreate = () => {
-    navigate('/customer-company-group/create')
+    navigate('/company-group/create')
   }
 
   return (

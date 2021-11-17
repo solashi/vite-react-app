@@ -2,12 +2,12 @@ import { Page } from 'components/Layouts'
 import { ReactTable } from 'components/ReactTable'
 import { useApiResource, usePaginationQuery } from 'lib/hooks'
 import { useDialog } from 'lib/providers'
-import { CustomerCompanyGroup as GroupType } from 'lib/types'
+import { CompanyGroup as GroupType } from 'lib/types'
 import { useCallback, useMemo } from 'react'
 import { CellProps, Column } from 'react-table'
 import LeftHeader from './LeftHeader'
 
-const CustomerCompanyGroup: React.VFC = () => {
+const CompanyGroup: React.VFC = () => {
   const { paginationData, refetch } = usePaginationQuery<GroupType>('groups')
   const { deleteApi } = useApiResource<GroupType>('groups')
   const dialog = useDialog()
@@ -57,4 +57,4 @@ const CustomerCompanyGroup: React.VFC = () => {
   )
 }
 
-export { CustomerCompanyGroup }
+export { CompanyGroup }
