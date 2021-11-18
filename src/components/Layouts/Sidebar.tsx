@@ -21,11 +21,11 @@ const sidebarAdmin = [
   },
   {
     label: 'グループ管理',
-    path: '/customer-company-group'
+    path: '/company-group'
   },
   {
     label: 'ユーザー管理',
-    path: '/customer-company-user'
+    path: '/company-user'
   },
   {
     label: 'ニュース管理',
