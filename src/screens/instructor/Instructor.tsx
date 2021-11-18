@@ -53,7 +53,7 @@ const Instructor: React.VFC = () => {
         console.log(error)
       }
     },
-    [deleteApi, refetch]
+    [deleteApi, dialog, refetch]
   )
 
   return (
