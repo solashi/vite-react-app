@@ -2,16 +2,11 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Avatar, Box, Button, Grid, Stack } from '@mui/material'
 import { Input } from 'components/Form'
 import { Page } from 'components/Layouts'
-import {
-  CreateInstructor,
-  createInstructorApi,
-  UpdateInstructor,
-  updateInstructorApi
-} from 'lib/api/instructor'
-import { Instrutor } from 'lib/types'
+import { useApiResource } from 'lib/hooks/useApiResource'
+import { Instructor } from 'lib/types'
 import { handleValidateErrors } from 'lib/utils'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { useMutation, useQuery } from 'react-query'
+import { useQuery } from 'react-query'
 import { useNavigate, useParams } from 'react-router'
 import * as yup from 'yup'
 
@@ -28,9 +23,9 @@ const FormInstructor: React.VFC = () => {
   const slug = useParams()
   const navigate = useNavigate()
 
-  const { control, handleSubmit, setValue, setError } = useForm<
-    CreateInstructor | UpdateInstructor
-  >({
+  const { createOrUpdateApi } = useApiResource<Instructor>('instructors')
+
+  const { control, handleSubmit, setValue, setError } = useForm<Instructor>({
     defaultValues: {
       id: Number(slug.id),
       name: '',
@@ -42,7 +37,7 @@ const FormInstructor: React.VFC = () => {
     resolver: yupResolver(validateInstructor)
   })
 
-  useQuery<Instrutor>([`instructors/${slug.id}`], {
+  useQuery<Instructor>([`instructors/${slug.id}`], {
     onSuccess: (data) => {
       setValue('name', data.name)
       setValue('name_en', data.name_en)
@@ -53,15 +48,9 @@ const FormInstructor: React.VFC = () => {
     enabled: !!slug?.id
   })
 
-  const createInstructor = useMutation(createInstructorApi)
-  const updateInstructor = useMutation(updateInstructorApi)
-  const onSubmit: SubmitHandler<CreateInstructor | UpdateInstructor> = async (values) => {
+  const onSubmit: SubmitHandler<Instructor> = async (values) => {
     try {
-      if (!slug?.id) {
-        createInstructor.mutateAsync(values)
-      } else {
-        updateInstructor.mutateAsync(values as UpdateInstructor)
-      }
+      await createOrUpdateApi(values)
       navigate('/instructor')
     } catch (error) {
       if (error.errors) {
