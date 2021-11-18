@@ -21,8 +21,7 @@ export interface UploadParams {
   meta?: UnknownObj // any extra data to forward to the FileBag.meta
 }
 
-export interface FileUploaderProps {
-  config?: UploadParams
+export interface FileUploaderProps extends UploadParams {
   getConfig?: (file: File) => Promise<UploadParams>
   onUploaded?: (fileBag: FileBag) => void
   onFailed?: (fileBag: FileBag) => void
@@ -36,7 +35,12 @@ export interface FileUploader {
   clearFileBags: () => void
 }
 
-function useUploader({ config, getConfig, onUploaded, onFailed }: FileUploaderProps): FileUploader {
+function useUploader({
+  getConfig,
+  onUploaded,
+  onFailed,
+  ...config
+}: FileUploaderProps): FileUploader {
   const [fileBags, setFileBags] = useState<FileBag[]>([])
   const [newFileBags, setNewFileBags] = useState<FileBag[]>([])
 

@@ -1,5 +1,6 @@
 export * from './useApiResource'
 export * from './useAuth'
+export * from './useDebounce'
 export * from './useModalState'
 export * from './usePaginationQuery'
 export * from './useSelectQuery'

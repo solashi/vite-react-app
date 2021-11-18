@@ -76,9 +76,7 @@ const FormCompany: React.VFC = () => {
   }
 
   const { onDrop } = useUploader({
-    config: {
-      url: 'upload'
-    },
+    url: 'upload',
     onUploaded: (file: FileBag) => {
       setValue('logo_path', file.responseData.link as string)
     }
