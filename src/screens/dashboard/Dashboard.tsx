@@ -1,10 +1,10 @@
-import { RichText } from 'components/Form/Input/RichText'
+import { Typography } from '@mui/material'
 import { Page } from 'components/Layouts'
 
 const Dashboard: React.VFC = () => {
   return (
     <Page title="ダッシュボード">
-      <RichText />
+      <Typography> Dashboard </Typography>
     </Page>
   )
 }
