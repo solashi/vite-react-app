@@ -7,7 +7,7 @@ import { useDialog } from 'lib/providers'
 import { AdminUser as UserType } from 'lib/types'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
-import { CellProps, Column } from 'react-table'
+import { CellProps, Column, Row } from 'react-table'
 
 const AdminUser: React.VFC = () => {
   const { paginationData, refetch } = usePaginationQuery<UserType>('admin-users')
@@ -51,8 +51,12 @@ const AdminUser: React.VFC = () => {
         console.log(error)
       }
     },
-    [deleteApi, refetch]
+    [deleteApi, dialog, refetch]
   )
+
+  const onRowClick = ({ original }: Row<UserType>) => {
+    navigate('/admin-user/' + original.id)
+  }
 
   return (
     <Page>
@@ -71,6 +75,7 @@ const AdminUser: React.VFC = () => {
         columns={columns}
         {...paginationData}
         defaultActionEdit
+        onRowClick={onRowClick}
         onActionDelete={handleDelete}
       />
     </Page>

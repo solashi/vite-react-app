@@ -75,7 +75,7 @@ const FormAdminUser: React.VFC = () => {
         <Stack spacing={2} mb={3}>
           <Input fullWidth label="名前" name="name" control={control} />
 
-          <Input fullWidth label="名前" name="email" control={control} />
+          <Input fullWidth label="メールアドレス" name="email" control={control} />
 
           <Input fullWidth label="パスワード" name="password" type="password" control={control} />
 
