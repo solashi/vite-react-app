@@ -20,9 +20,11 @@ const DrawerLeft: React.FC = ({ children }) => {
         flexShrink: 0,
         '& .MuiDrawer-paper': {
           width: drawerWidth,
-          boxSizing: 'border-box'
+          boxSizing: 'border-box',
+          border: 'none'
         }
       }}
+      elevation={0}
       variant="persistent"
       anchor="left"
       open={true}
