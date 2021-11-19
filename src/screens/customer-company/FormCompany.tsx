@@ -25,7 +25,7 @@ const FormCompany: React.VFC = () => {
   const { createOrUpdateApi } = useApiResource<Company>('companies')
   const isEdit = !!params?.id
 
-  const { control, handleSubmit, setError, setValue } = useForm<Company>({
+  const { control, handleSubmit, setError, setValue, getValues } = useForm<Company>({
     defaultValues: {
       id: Number(params?.id) || undefined,
       name: '',
