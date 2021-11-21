@@ -6,8 +6,7 @@ import { useController, UseControllerProps } from 'react-hook-form'
 import Viewer from 'react-viewer'
 import { AddControlProps, InputControl } from './Form'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AvatarUploadProps = UseControllerProps<any> &
+export type AvatarUploadProps<T> = UseControllerProps<T> &
   AvatarProps<
     'div',
     AddControlProps & {
@@ -42,7 +41,7 @@ const Input = styled('input')({
   display: 'none'
 })
 
-const AvatarUpload: React.VFC<AvatarUploadProps> = ({
+function AvatarUpload<T>({
   name,
   control,
   defaultValue,
@@ -53,7 +52,7 @@ const AvatarUpload: React.VFC<AvatarUploadProps> = ({
   size = 96,
   multiple,
   ...props
-}) => {
+}: AvatarUploadProps<T>) {
   const {
     field: { onChange, value },
     fieldState: { error }
@@ -95,7 +94,13 @@ const AvatarUpload: React.VFC<AvatarUploadProps> = ({
             }
           >
             {value ? (
-              <AvatarWithSize onClick={onOpen} hasViewer size={size} src={value} {...props} />
+              <AvatarWithSize
+                onClick={onOpen}
+                hasViewer
+                size={size}
+                src={value as string}
+                {...props}
+              />
             ) : (
               <AvatarWithSize size={size} {...props} />
             )}

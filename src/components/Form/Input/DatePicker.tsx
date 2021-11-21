@@ -1,8 +1,9 @@
 import { Autocomplete, FormControlProps, InputAdornment, Stack } from '@mui/material'
 import { Box, BoxProps } from '@mui/system'
+import { isValid } from 'date-fns'
 import { addZero, getDaysInMonth } from 'lib/utils'
 import ranger from 'lodash/rangeRight'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useController, UseControllerProps } from 'react-hook-form'
 import { AddControlProps, FormHelper, FormLabel, InputStyled } from '..'
 
@@ -27,7 +28,7 @@ function DatePicker<T>({
   containerProps
 }: DatePickerProps<T>) {
   const {
-    field: { onChange },
+    field: { onChange, value },
     fieldState: { error: fieldError }
   } = useController({ name, control, defaultValue })
 
@@ -53,6 +54,14 @@ function DatePicker<T>({
     }
     onChange(d)
   }
+
+  useEffect(() => {
+    if (!value || !isValid(new Date(value as Date))) return
+    const d = (value as string).split('/')
+    setYear(d[0])
+    setMonth(d[1])
+    setDate(d[2])
+  }, [value])
 
   const dateOptions = useMemo(() => {
     const dates =
