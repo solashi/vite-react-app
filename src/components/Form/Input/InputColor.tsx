@@ -2,14 +2,13 @@ import { FormControlProps, InputBase, InputBaseProps } from '@mui/material'
 import { Control, useController, UseControllerProps } from 'react-hook-form'
 import { AddControlProps, ColorAdornment, InputControl } from '..'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type InputColorProps = UseControllerProps<any> &
+export type InputColorProps<T> = UseControllerProps<T> &
   InputBaseProps &
   AddControlProps & {
     controlProps?: FormControlProps
   }
 
-function InputColor({
+function InputColor<T>({
   name,
   control,
   defaultValue,
@@ -18,7 +17,7 @@ function InputColor({
   helperText,
   controlProps,
   ...props
-}: InputColorProps) {
+}: InputColorProps<T>) {
   const {
     field: { ref, ...inputProps },
     fieldState: { error }

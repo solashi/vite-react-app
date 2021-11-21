@@ -1,3 +1,4 @@
+export * from './AutoComplete'
 export * from './ColorAdornment'
 export * from './FormDetail'
 export * from './FormHelper'

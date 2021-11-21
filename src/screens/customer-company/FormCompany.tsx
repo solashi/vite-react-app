@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Button, Grid, Stack, useTheme } from '@mui/material'
 import { Input, InputColor, InputTag, RawInput, Select } from 'components/Form'
-import { ImageUploader } from 'components/ImageUploader'
 import { Page } from 'components/Layouts'
 import { FileBag, useApiResource, useUploader } from 'lib/hooks'
 import { Company, CustomerCompany, Domain, GroupType, ServiceType } from 'lib/types'
@@ -170,8 +169,6 @@ const FormCompany: React.VFC = () => {
               width: 600
             }}
           />
-
-          <ImageUploader name="image" control={control} label="Image upload" />
         </Stack>
 
         <Grid container justifyContent="center">

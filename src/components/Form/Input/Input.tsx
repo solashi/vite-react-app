@@ -3,14 +3,13 @@ import { useController, UseControllerProps } from 'react-hook-form'
 import { AddControlProps, InputControl } from '..'
 import { InputStyled } from '../components/InputStyled'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type InputProps = UseControllerProps<any> &
+export type InputProps<T> = UseControllerProps<T> &
   OutlinedInputProps &
   AddControlProps & {
     controlProps?: FormControlProps
   }
 
-function Input({
+function Input<T>({
   name,
   control,
   defaultValue,
@@ -19,7 +18,7 @@ function Input({
   helperText,
   controlProps,
   ...props
-}: InputProps) {
+}: InputProps<T>) {
   const {
     field: { ref, ...inputProps },
     fieldState: { error }

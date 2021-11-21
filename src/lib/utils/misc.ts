@@ -16,3 +16,5 @@ export const formatFileSize = (sizeInBytes: number) => {
   } while (Math.abs(sizeInBytes) >= thresh && u < units.length - 1)
   return sizeInBytes.toFixed(1) + ' ' + units[u]
 }
+
+export const addZero = (num: number) => ('0' + num).slice(-2)
