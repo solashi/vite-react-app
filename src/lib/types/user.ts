@@ -3,8 +3,8 @@ export type UserType = {
   logo_path: string
   last_name: string
   first_name: string
-  last_name_kana: string
   first_name_kana: string
+  last_name_kana: string
   gender: number
   birthday: string
   tell: string
