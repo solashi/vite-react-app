@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Stack, Typography } from '@mui/material'
-import { Input, Select } from 'components/Form'
-import { DateOfBirth } from 'components/Form/Date'
+import { Input, InputTag, Select } from 'components/Form'
+import { DatePicker } from 'components/Form/Input/DatePicker'
 import { ImageUploader } from 'components/ImageUploader'
 import { Page } from 'components/Layouts'
 import { useApiResource } from 'lib/hooks'
@@ -46,16 +46,9 @@ const FormUser: React.VFC = () => {
 
   useQuery<UserType>([`users/${params.id}`], {
     onSuccess: (data) => {
-      setValue('last_name', data.last_name)
-      setValue('first_name', data.first_name)
-      setValue('last_name_kana', data.last_name_kana)
-      setValue('first_name_kana', data.first_name_kana)
-      setValue('gender', data.gender)
-      setValue('company_id', data.company_id)
-      setValue('birthday', data.birthday)
-      setValue('tell', data.tell)
-      setValue('email', data.email)
-      setValue('aff_company', data.aff_company)
+      for (const name in data) {
+        setValue(name as keyof UserType, data[name as keyof UserType])
+      }
     },
     enabled: isEdit
   })
@@ -81,7 +74,7 @@ const FormUser: React.VFC = () => {
   return (
     <Page title={isEdit ? 'ユーザー新規編集' : 'ユーザー新規登録'}>
       <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
-        <Stack>
+        <Stack spacing={2}>
           <ImageUploader name="image" control={control} label="プロフィール画像" />
 
           <Stack direction="row" spacing={2}>
@@ -96,7 +89,7 @@ const FormUser: React.VFC = () => {
 
           <Select name="gender" label="性別" control={control} options={options} />
 
-          <DateOfBirth label="生年月日" fullWidth name="birthday" control={control} />
+          <DatePicker label="生年月日" fullWidth name="birthday" control={control} />
 
           <Input fullWidth label="電話番号" name="tell" control={control} />
 
@@ -110,14 +103,7 @@ const FormUser: React.VFC = () => {
             query="companies"
           />
 
-          <Select<CustomerCompany>
-            name="interesting_fields"
-            label="興味のある分野"
-            fullWidth
-            control={control}
-            query="companies"
-            multiple
-          />
+          <InputTag name="interesting_fields" label="興味のある分野" fullWidth control={control} />
 
           <Select<CustomerCompany>
             name="company_id"
