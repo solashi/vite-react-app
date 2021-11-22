@@ -16,7 +16,7 @@ const queryConfig: DefaultOptions = {
   queries: {
     queryFn: defaultFn,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     retry: false
   }
 }
