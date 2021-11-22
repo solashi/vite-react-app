@@ -3,6 +3,7 @@ import { Input, InputTag, Select } from 'components/Form'
 import { DatePicker } from 'components/Form/Input/DatePicker'
 import { ImageUploader } from 'components/ImageUploader'
 import { Page } from 'components/Layouts'
+import { genderOptions } from 'lib/constants'
 import { useApiResource } from 'lib/hooks'
 import { CustomerCompany, UserType } from 'lib/types'
 import { handleValidateErrors } from 'lib/utils'
@@ -47,16 +48,14 @@ const FormUser: React.VFC = () => {
   useQuery<UserType>([`users/${params.id}`], {
     onSuccess: (data) => {
       for (const name in data) {
+        if (name === 'interesting_fields') return
         setValue(name as keyof UserType, data[name as keyof UserType])
       }
+
+      setValue('interesting_fields', JSON.parse(data.interesting_fields as string))
     },
     enabled: isEdit
   })
-
-  const options = [
-    { value: 1, label: '男性' },
-    { value: 2, label: '女性' }
-  ]
 
   const { createOrUpdateApi } = useApiResource<UserType>('users')
 
@@ -87,9 +86,15 @@ const FormUser: React.VFC = () => {
             <Input fullWidth label="名（かな）" name="first_name_kana" control={control} />
           </Stack>
 
-          <Select name="gender" label="性別" control={control} options={options} />
+          <Select name="gender" label="性別" control={control} options={genderOptions} />
 
-          <DatePicker label="生年月日" fullWidth name="birthday" control={control} />
+          <DatePicker
+            label="生年月日"
+            splitString="-"
+            fullWidth
+            name="birthday"
+            control={control}
+          />
 
           <Input fullWidth label="電話番号" name="tell" control={control} />
 

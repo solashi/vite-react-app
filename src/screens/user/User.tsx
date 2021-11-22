@@ -32,7 +32,7 @@ const User: React.VFC = () => {
       },
       {
         Header: '所属企業',
-        accessor: 'company'
+        accessor: 'company.name' as 'company'
       },
       {
         Header: '担当したことのある コンシェルジュ',

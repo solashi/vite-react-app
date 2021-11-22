@@ -24,5 +24,5 @@ export type UserType = {
   company: number
   concierge: number
   company_id: number
-  interesting_fields: []
+  interesting_fields: string[] | string
 }
