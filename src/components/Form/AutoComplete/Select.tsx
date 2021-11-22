@@ -26,8 +26,7 @@ export type SelectQueryProps<T extends UnknownObj> = {
 
 export type LabelValueType<T> = [keyof T, keyof T]
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type BaseSelectProps<T> = UseControllerProps<any> &
+export type BaseSelectProps<T, F> = UseControllerProps<F> &
   AddControlProps &
   OutlinedInputProps & {
     controlProps?: FormControlProps
@@ -37,11 +36,11 @@ export type BaseSelectProps<T> = UseControllerProps<any> &
     labelValueKeys?: LabelValueType<T>
   }
 
-export type SelectProps<T extends UnknownObj> = BaseSelectProps<T> & SelectQueryProps<T>
+export type SelectProps<T extends UnknownObj, F> = BaseSelectProps<T, F> & SelectQueryProps<T>
 
 const defaultKey = ['name', 'id']
 
-function Select<T extends UnknownObj>({
+function Select<T extends UnknownObj, F = any>({
   name,
   control,
   defaultValue,
@@ -57,7 +56,7 @@ function Select<T extends UnknownObj>({
   addQueryFilter,
   labelValueKeys = defaultKey as LabelValueType<T>,
   ...props
-}: SelectProps<T>) {
+}: SelectProps<T, F>) {
   const {
     field: { ref, onChange, onBlur, value: rawValue },
     fieldState: { error }
@@ -104,7 +103,7 @@ function Select<T extends UnknownObj>({
 
   useEffect(() => {
     setValue(filterValue(rawValue))
-  }, [rawValue, filterValue])
+  }, [rawValue, filterValue, multiple])
 
   const handleChangeValue = (
     e: SyntheticEvent<Element, Event>,
@@ -122,12 +121,8 @@ function Select<T extends UnknownObj>({
     setValue(newValue)
   }
 
-  const handleChangeInputValue = (
-    e: SyntheticEvent<Element, Event>,
-    newValue: string,
-    reason: string
-  ) => {
-    if (reason === 'reset') return
+  const handleChangeInputValue = (e: SyntheticEvent<Element, Event>, newValue: string) => {
+    // if (reason === 'reset') return
     setInputValue(newValue)
   }
 
