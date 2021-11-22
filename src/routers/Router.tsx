@@ -9,6 +9,7 @@ import { CompanyDetail, CustomerCompany, FormCompany } from 'screens/customer-co
 import { Dashboard } from 'screens/dashboard'
 import { FormInstructor, Instructor } from 'screens/instructor'
 import { NoMatch } from 'screens/NoMatch'
+import { User } from 'screens/user'
 import { RequireAuth } from './RequireAuth'
 
 const Router: React.VFC = () => {
@@ -48,6 +49,8 @@ const Router: React.VFC = () => {
         <Route path="/company-group/create" element={<FormCompanyGroup />} />
         <Route path="/company-group/edit/:id" element={<FormCompanyGroup />} />
         <Route path="/company-group/:id" element={<CompanyGroupDetail />} />
+
+        <Route path="/user" element={<User />} />
       </Route>
       <Route path="*" element={<NoMatch />} />
     </Routes>

@@ -1,9 +1,8 @@
-type AdminUser = {
+export type UserType = {
   id: number
-  name: string
-  email: string
-  password: string
-  super_admin_flg: number
+  last_name: string
+  first_name: string
+  status: string
+  company: number
+  concierge: number
 }
-
-export type { AdminUser }

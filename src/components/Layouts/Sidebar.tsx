@@ -25,7 +25,7 @@ const sidebarAdmin = [
   },
   {
     label: 'ユーザー管理',
-    path: '/company-user'
+    path: '/user'
   },
   {
     label: 'ニュース管理',
