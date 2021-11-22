@@ -1,7 +1,9 @@
 import { Box, Button, Grid, Stack, Typography } from '@mui/material'
-import { Input, RawInput, Select } from 'components/Form'
+import { Input, Select } from 'components/Form'
+import { DateOfBirth } from 'components/Form/Date'
+import { ImageUploader } from 'components/ImageUploader'
 import { Page } from 'components/Layouts'
-import { FileBag, useApiResource, useUploader } from 'lib/hooks'
+import { useApiResource } from 'lib/hooks'
 import { CustomerCompany, UserType } from 'lib/types'
 import { handleValidateErrors } from 'lib/utils'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -13,7 +15,7 @@ const FormUser: React.VFC = () => {
   const params = useParams()
   const isEdit = !!params?.id
 
-  const { control, handleSubmit, setError, setValue, getValues } = useForm<UserType>({
+  const { control, handleSubmit, setError, setValue } = useForm<UserType>({
     defaultValues: {
       id: Number(params?.id) || undefined,
       last_name: '',
@@ -58,19 +60,6 @@ const FormUser: React.VFC = () => {
     enabled: isEdit
   })
 
-  const { onDrop } = useUploader({
-    config: {
-      url: 'upload'
-    },
-    onUploaded: (file: FileBag) => {
-      setValue('logo_path', file.responseData.link as string)
-    }
-  })
-  const handleChooseImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const target = event.target as HTMLInputElement
-    onDrop(target.files as FileList)
-  }
-
   const options = [
     { value: 1, label: '男性' },
     { value: 2, label: '女性' }
@@ -93,15 +82,7 @@ const FormUser: React.VFC = () => {
     <Page title={isEdit ? 'ユーザー新規編集' : 'ユーザー新規登録'}>
       <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
         <Stack>
-          {getValues('logo_path') && (
-            <img src={getValues('logo_path')} alt="logo" width={150} height={150} />
-          )}
-          <RawInput
-            label="プロフィール画像"
-            type="file"
-            variant="base"
-            onChange={handleChooseImage}
-          />
+          <ImageUploader name="image" control={control} label="プロフィール画像" />
 
           <Stack direction="row" spacing={2}>
             <Input fullWidth label="姓" name="last_name" control={control} />
@@ -113,10 +94,9 @@ const FormUser: React.VFC = () => {
             <Input fullWidth label="名（かな）" name="first_name_kana" control={control} />
           </Stack>
 
-          <Stack direction="row" spacing={2}>
-            <Select name="gender" label="性別" fullWidth control={control} options={options} />
-            <Input fullWidth label="生年月日 " name="birthday" control={control} />
-          </Stack>
+          <Select name="gender" label="性別" control={control} options={options} />
+
+          <DateOfBirth label="生年月日" fullWidth name="birthday" control={control} />
 
           <Input fullWidth label="電話番号" name="tell" control={control} />
 
