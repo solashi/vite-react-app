@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.3.0",
     "@hookform/resolvers": "^2.8.3",
     "@mui/icons-material": "^5.0.5",
+    "@mui/lab": "^5.0.0-alpha.55",
     "@mui/material": "^5.1.1",
     "@tinymce/tinymce-react": "^3.13.0",
     "axios": "^0.24.0",
