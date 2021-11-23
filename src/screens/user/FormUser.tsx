@@ -1,6 +1,5 @@
 import { Box, Button, Grid, Stack, Typography } from '@mui/material'
-import { Input, InputTag, Select } from 'components/Form'
-import { DatePicker } from 'components/Form/Input/DatePicker'
+import { DatePickerSeparator, Input, InputTag, Select } from 'components/Form'
 import { ImageUploader } from 'components/ImageUploader'
 import { Page } from 'components/Layouts'
 import { genderOptions } from 'lib/constants'
@@ -88,13 +87,7 @@ const FormUser: React.VFC = () => {
 
           <Select name="gender" label="性別" control={control} options={genderOptions} />
 
-          <DatePicker
-            label="生年月日"
-            splitString="-"
-            fullWidth
-            name="birthday"
-            control={control}
-          />
+          <DatePickerSeparator label="生年月日" fullWidth name="birthday" control={control} />
 
           <Input fullWidth label="電話番号" name="tell" control={control} />
 

@@ -12,6 +12,7 @@ export type DatePickerSeparatorProps<T> = UseControllerProps<T> &
     controlProps?: FormControlProps
     fullWidth?: boolean
     containerProps?: BoxProps
+    splitString?: string
   }
 
 const monthOptions = [...new Array(12)].map((_, index) => addZero(index + 1))
@@ -25,7 +26,8 @@ function DatePickerSeparator<T>({
   defaultValue,
   label,
   helperText,
-  containerProps
+  containerProps,
+  splitString = '-'
 }: DatePickerSeparatorProps<T>) {
   const {
     field: { onChange, value },
@@ -41,15 +43,15 @@ function DatePickerSeparator<T>({
     switch (type) {
       case 'year':
         setYear(newValue)
-        d = `${newValue}/${month}/${date}`
+        d = newValue + splitString + month + splitString + date
         break
       case 'month':
         setMonth(newValue)
-        d = `${year}/${newValue}/${date}`
+        d = year + splitString + newValue + splitString + date
         break
       default:
         setDate(newValue)
-        d = `${year}/${month}/${newValue}`
+        d = year + splitString + month + splitString + newValue
         break
     }
     onChange(d)
@@ -57,11 +59,11 @@ function DatePickerSeparator<T>({
 
   useEffect(() => {
     if (!value || !isValid(new Date(value as Date))) return
-    const d = (value as string).split('/')
+    const d = (value as string).split(splitString)
     setYear(d[0])
     setMonth(d[1])
     setDate(d[2])
-  }, [value])
+  }, [splitString, value])
 
   const dateOptions = useMemo(() => {
     const dates =

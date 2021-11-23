@@ -8,7 +8,7 @@ import {
 import { ReactNode, Ref } from 'react'
 import { InputStyled } from '../components/InputStyled'
 
-export type SelectOption = {
+type SelectOption = {
   label: string
   value: unknown
 }
