@@ -5,7 +5,7 @@ import { InputProps } from '.'
 import { InputControl, Tag } from '..'
 import { InputStyled } from '../components/InputStyled'
 
-function InputTag({
+function InputTag<T>({
   name,
   control,
   defaultValue,
@@ -14,7 +14,7 @@ function InputTag({
   helperText,
   controlProps,
   ...props
-}: InputProps) {
+}: InputProps<T>) {
   const {
     field: { onBlur, onChange, value },
     fieldState: { error }
@@ -25,22 +25,22 @@ function InputTag({
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const { key } = e
     const trimmedInput = String(inputRef.current?.value || '').trim()
-    if (key === ',' && trimmedInput.length && !value.includes(trimmedInput)) {
+    if (key === ',' && trimmedInput.length && !(value as string[]).includes(trimmedInput)) {
       e.preventDefault()
-      onChange([...value, trimmedInput])
+      onChange([...(value as string[]), trimmedInput])
       ;(inputRef.current as HTMLInputElement).value = ''
     }
   }
 
   const onDeleteTag = (tag: string) => {
-    const newValue = value.filter((t: string) => t !== tag)
+    const newValue = (value as string[]).filter((t: string) => t !== tag)
     onChange(newValue)
   }
 
   const handleBlur = () => {
     const trimmedInput = String(inputRef.current?.value || '').trim()
     if (trimmedInput) {
-      onChange([...value, trimmedInput])
+      onChange([...(value as string[]), trimmedInput])
       ;(inputRef.current as HTMLInputElement).value = ''
     }
     onBlur()
@@ -59,11 +59,13 @@ function InputTag({
         {...props}
         onKeyDown={onKeyDown}
         startAdornment={
-          <InputAdornment position="end">
-            {value.map((tag: string) => (
-              <Tag label={tag} key={tag} onDelete={() => onDeleteTag(tag)} sx={{ mr: 1 }} />
-            ))}
-          </InputAdornment>
+          (value as string[]).length > 0 ? (
+            <InputAdornment position="end">
+              {(value as string[]).map((tag: string) => (
+                <Tag label={tag} key={tag} onDelete={() => onDeleteTag(tag)} sx={{ mr: 1 }} />
+              ))}
+            </InputAdornment>
+          ) : null
         }
         inputRef={inputRef}
       />
