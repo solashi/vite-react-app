@@ -4,13 +4,15 @@ import { useApiResource, usePaginationQuery } from 'lib/hooks'
 import { useDialog } from 'lib/providers'
 import { UserType } from 'lib/types/user'
 import { useCallback, useMemo } from 'react'
-import { CellProps, Column } from 'react-table'
+import { useNavigate } from 'react-router-dom'
+import { CellProps, Column, Row } from 'react-table'
 import LeftHeader from './LeftHeader'
 
 const User: React.VFC = () => {
   const { paginationData, refetch } = usePaginationQuery<UserType>('users')
   const dialog = useDialog()
   const { deleteApi } = useApiResource<UserType>('users')
+  const navigate = useNavigate()
 
   const columns = useMemo<Column<UserType>[]>(
     () => [
@@ -57,12 +59,17 @@ const User: React.VFC = () => {
     [deleteApi, dialog, refetch]
   )
 
+  const onRowClick = ({ original }: Row<UserType>) => {
+    navigate('/user/' + original.id)
+  }
+
   return (
     <Page title="ユーザー一覧" leftHeader={<LeftHeader />}>
       <ReactTable<UserType>
         columns={columns}
         defaultActionEdit
         onActionDelete={handleDelete}
+        onRowClick={onRowClick}
         {...paginationData}
       />
     </Page>
