@@ -1,5 +1,5 @@
 import { SelectOption } from 'components/Form'
-import { Pagination, UnknownObj } from 'lib/types'
+import { UnknownObj } from 'lib/types'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
@@ -20,13 +20,13 @@ function useSelectQuery<T extends UnknownObj>({
   labelValueKeys,
   enabled
 }: UseSelectQueryOptions<T>) {
-  const { data, ...queryResult } = useQuery<Pagination<T>>([endpoint, params], {
+  const { data, ...queryResult } = useQuery<T[]>([endpoint, params], {
     enabled
   })
 
   const options = useMemo<SelectOption[]>(() => {
     if (!data) return []
-    return data.data.map((el) => ({
+    return data.map((el) => ({
       label: el[labelValueKeys[0]] as string,
       value: el[labelValueKeys[1]]
     }))
