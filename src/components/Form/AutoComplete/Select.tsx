@@ -68,7 +68,7 @@ function Select<T extends UnknownObj, F = any>({
     if (!queryFilter && !addQueryFilter) return { per_page: 1000 }
     const inputParams = inputValue && queryFilter ? { [queryFilter]: inputValue } : undefined
 
-    return { per_page: 1000, ...inputParams, ...addQueryFilter }
+    return { per_page: -1, ...inputParams, ...addQueryFilter }
   }, [addQueryFilter, inputValue, queryFilter])
 
   const { options: queryOptions, isLoading } = useSelectQuery<T>({
