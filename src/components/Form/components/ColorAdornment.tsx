@@ -1,14 +1,13 @@
 import { InputAdornment } from '@mui/material'
 import { Control } from 'react-hook-form'
 
-type Props = {
+type Props<T> = {
   name: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  control: Control<any, object>
+  control: Control<T, object>
   onChange(e: React.ChangeEvent<HTMLInputElement>): void
 }
 
-const ColorAdornment: React.VFC<Props> = ({ name, control, onChange }) => {
+function ColorAdornment<T>({ name, control, onChange }: Props<T>) {
   const { _formValues } = control
 
   return (

@@ -37,8 +37,7 @@ function InputColor<T>({
         startAdornment={
           <ColorAdornment
             name={name}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            control={control as Control<any, object>}
+            control={control as Control<T, object>}
             onChange={inputProps.onChange}
           />
         }
