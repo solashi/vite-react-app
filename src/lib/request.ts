@@ -15,6 +15,27 @@ function authRequestInterceptor(config: AxiosRequestConfig) {
   return config
 }
 
+export type RefreshTokenResponse = {
+  refresh_token: string
+  access_token: string
+}
+
+async function refreshToken(token: UserToken) {
+  try {
+    const res = await Axios.request<RefreshTokenResponse>({
+      method: 'POST',
+      baseURL,
+      data: {
+        refresh_token: token.refresh_token
+      }
+    })
+
+    return res.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const request = Axios.create({
   baseURL
 })
@@ -27,6 +48,18 @@ request.interceptors.response.use(
   (error) => {
     // const message = error.response?.data?.message || error.message
     // Handle toast message
+    // Handle refresh token
+    if (error.response && error.response.status === 401) {
+      const _token = localStorage.getItem('user-token')
+      if (_token) {
+        const token = JSON.parse(_token) as UserToken
+        return refreshToken(token).then((res) => {
+          error.config.headers.authorization = `Bearer ${res?.access_token}`
+          localStorage.setItem('user-token', JSON.stringify(res))
+          return request.request(error.config)
+        })
+      }
+    }
 
     return Promise.reject(error.response.data)
   }
