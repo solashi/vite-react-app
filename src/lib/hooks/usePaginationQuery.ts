@@ -13,10 +13,12 @@ function usePaginationQuery<T>(
     per_page: 10
   })
 
+  const [_params, setParams] = useState(params)
+
   const queryClient = useQueryClient()
 
   const { data, isFetching, isPreviousData, ...queryResult } = useQuery<Pagination<T>>(
-    [endpoint, { ...meta, ...params }],
+    [endpoint, { ...meta, ...params, ..._params }],
     {
       keepPreviousData: true,
       staleTime: 10000,
@@ -36,6 +38,10 @@ function usePaginationQuery<T>(
     setMeta(paginationMeta)
   }, [])
 
+  const handleChangeParams = useCallback((newParams) => {
+    setParams(newParams)
+  }, [])
+
   const paginationData = useMemo(
     () => ({
       data: data?.data || [],
@@ -47,7 +53,7 @@ function usePaginationQuery<T>(
     [data, isFetching, isPreviousData, handleChangePagination]
   )
 
-  return { paginationData, ...queryResult }
+  return { paginationData, handleChangeParams, ...queryResult }
 }
 
 export { usePaginationQuery }

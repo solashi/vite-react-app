@@ -1,5 +1,5 @@
 import { Page } from 'components/Layouts'
-import { ReactTable } from 'components/ReactTable'
+import { FilterBar, ReactTable } from 'components/ReactTable'
 import { useApiResource, usePaginationQuery } from 'lib/hooks'
 import { useDialog } from 'lib/providers'
 import { CompanyGroup as GroupType } from 'lib/types'
@@ -9,7 +9,7 @@ import { CellProps, Column, Row } from 'react-table'
 import LeftHeader from './LeftHeader'
 
 const CompanyGroup: React.VFC = () => {
-  const { paginationData, refetch } = usePaginationQuery<GroupType>('groups')
+  const { paginationData, refetch, handleChangeParams } = usePaginationQuery<GroupType>('groups')
   const { deleteApi } = useApiResource<GroupType>('groups')
   const dialog = useDialog()
   const navigate = useNavigate()
@@ -53,6 +53,7 @@ const CompanyGroup: React.VFC = () => {
 
   return (
     <Page title="企業一覧" leftHeader={<LeftHeader />}>
+      <FilterBar searchColumns={columns} handleChangeParams={handleChangeParams} mb={2} />
       <ReactTable<GroupType>
         columns={columns}
         defaultActionEdit
