@@ -1,4 +1,3 @@
-import { Box, Button, Stack, Typography } from '@mui/material'
 import { Page } from 'components/Layouts'
 import { ReactTable } from 'components/ReactTable'
 import { useApiResource, usePaginationQuery } from 'lib/hooks'
@@ -6,7 +5,8 @@ import { useDialog } from 'lib/providers'
 import { Instructor as InstructorType } from 'lib/types'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
-import { CellProps, Column } from 'react-table'
+import { CellProps, Column, Row } from 'react-table'
+import LeftHeader from './LeftHeader'
 
 const Instructor: React.VFC = () => {
   const { paginationData, refetch } = usePaginationQuery<InstructorType>('instructors')
@@ -14,10 +14,6 @@ const Instructor: React.VFC = () => {
   const navigate = useNavigate()
   const dialog = useDialog()
   const { deleteApi } = useApiResource<InstructorType>('instructors')
-
-  const handleCreate = () => {
-    navigate('/instructor/create')
-  }
 
   const columns = useMemo<Column<InstructorType>[]>(
     () => [
@@ -56,22 +52,18 @@ const Instructor: React.VFC = () => {
     [deleteApi, dialog, refetch]
   )
 
+  const onRowClick = ({ original }: Row<InstructorType>) => {
+    navigate('/instructors/' + original.id)
+  }
+
   return (
-    <Page>
-      <Stack direction="row" mb={{ md: 6 }} justifyContent="space-between">
-        <Typography variant="h4">管理者管理一覧</Typography>
-
-        <Box>
-          <Button>search</Button>
-          <Button onClick={handleCreate}>新規追加</Button>
-        </Box>
-      </Stack>
-
-      <ReactTable
+    <Page title="イベント講師一覧" leftHeader={<LeftHeader />}>
+      <ReactTable<InstructorType>
         columns={columns}
-        {...paginationData}
         defaultActionEdit
         onActionDelete={handleDelete}
+        onRowClick={onRowClick}
+        {...paginationData}
       />
     </Page>
   )
