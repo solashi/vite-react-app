@@ -1,10 +1,9 @@
 import { Checkbox } from '@mui/material'
-import { UnknownObj } from 'lib/types'
 import { CellProps, HeaderProps, Hooks, usePagination, useRowSelect, useSortBy } from 'react-table'
 import { ActionColumnConfig } from '.'
 import TableAction from './components/TableAction'
 
-function selectionHook<T extends Record<string, unknown>>(enabled: boolean) {
+function selectionHook<T extends object>(enabled: boolean) {
   return (hooks: Hooks<T>) => {
     if (!enabled) return
     hooks.allColumns.push((columns) => [
@@ -30,14 +29,14 @@ function selectionHook<T extends Record<string, unknown>>(enabled: boolean) {
   }
 }
 
-export type ActionHookArgs<T extends UnknownObj> = {
+export type ActionHookArgs<T extends object> = {
   actionConfig?: ActionColumnConfig
   onActionEdit?(props: CellProps<T>): void
   onActionDelete?(props: CellProps<T>): void
   defaultActionEdit?: boolean
 }
 
-function actionHook<T extends Record<string, unknown>>({
+function actionHook<T extends object>({
   actionConfig,
   onActionDelete,
   onActionEdit,

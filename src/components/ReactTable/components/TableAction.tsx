@@ -7,7 +7,7 @@ import { CellProps } from 'react-table'
 import { ActionColumnConfig } from '..'
 import { CellContainer } from './CellContainer'
 
-interface TableActionProps<T extends UnknownObj> extends CellProps<T> {
+interface TableActionProps<T extends object> extends CellProps<T> {
   actionConfig?: ActionColumnConfig
   onActionEdit?(props: CellProps<T>): void
   onActionDelete?(props: CellProps<T>): void
@@ -23,7 +23,7 @@ const defaultConfig = {
 
 export const TableActionContainer = <Stack onClick={(e) => e.stopPropagation()} />
 
-function TableAction<T extends Record<string, unknown>>(props: TableActionProps<T>) {
+function TableAction<T extends object>(props: TableActionProps<T>) {
   const { row, actionConfig, onActionEdit, onActionDelete, defaultActionEdit } = props
   const { editText, deleteText, deleteConfirmText, needConfirm } = Object.assign(
     defaultConfig,
@@ -38,7 +38,7 @@ function TableAction<T extends Record<string, unknown>>(props: TableActionProps<
   const hasDelete = typeof onActionDelete === 'function'
 
   const defaultEditAction = () => {
-    navigate(`edit/${original.id}`)
+    navigate(`edit/${(original as UnknownObj).id}`)
   }
 
   const handleEdit = () => {

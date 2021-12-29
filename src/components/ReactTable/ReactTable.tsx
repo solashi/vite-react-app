@@ -1,13 +1,17 @@
 import {
   ClickAwayListener,
+  PaginationProps,
   Paper,
   Stack,
+  StackProps,
   Table,
   TableBody,
   TableContainer,
+  TableContainerProps,
   TableFooter,
   TableHead,
-  TableProps
+  TableProps,
+  TableRow
 } from '@mui/material'
 import { SxProps } from '@mui/system'
 import { TableSkeleton, TableSkeletonType } from 'components/Skeleton'
@@ -30,7 +34,7 @@ export type ActionColumnConfig = {
   deleteConfirmText?: string
 }
 
-interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
+interface TableProperties<T extends object> extends TableOptions<T> {
   tableProps?: TableProps
   sx?: SxProps
   onRowClick?(row: RowProps<T>): void
@@ -45,9 +49,13 @@ interface TableProperties<T extends Record<string, unknown>> extends TableOption
   onActionEdit?(props: CellProps<T>): void
   onActionDelete?(props: CellProps<T>): void
   defaultActionEdit?: boolean
+  paginationType?: 'table' | 'normal'
+  nPaginationProps?: PaginationProps
+  nPaginationContainerProps?: StackProps
+  tableContainerProps?: TableContainerProps
 }
 
-function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>): ReactElement {
+function ReactTable<T extends object>(props: TableProperties<T>): ReactElement {
   const {
     columns,
     data,
@@ -64,6 +72,10 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
     defaultActionEdit,
     skeletonConfig,
     sx,
+    paginationType = 'table',
+    nPaginationProps,
+    nPaginationContainerProps,
+    tableContainerProps,
     ...useTableOptions
   } = props
 
@@ -109,7 +121,7 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
 
   return (
     <ClickAwayListener onClickAway={onClickAway}>
-      <TableContainer component={Paper} sx={sx}>
+      <TableContainer component={Paper} sx={sx} {...tableContainerProps}>
         <Table {...tableProps} {...getTableProps()}>
           <TableHead>
             {headerGroups.map((headerGroup) => {
@@ -172,12 +184,24 @@ function ReactTable<T extends Record<string, unknown>>(props: TableProperties<T>
             })}
           </TableBody>
 
-          <TableFooter>
-            <Row>
-              <Pagination<T> instance={instance} />
-            </Row>
-          </TableFooter>
+          {paginationType === 'table' && (
+            <TableFooter>
+              <TableRow>
+                <Pagination<T> instance={instance} />
+              </TableRow>
+            </TableFooter>
+          )}
         </Table>
+
+        {paginationType === 'normal' && (
+          <Stack direction="row" my={3} {...nPaginationContainerProps} justifyContent="center">
+            <Pagination<T>
+              type={paginationType}
+              instance={instance}
+              nPaginationProps={nPaginationProps}
+            />
+          </Stack>
+        )}
       </TableContainer>
     </ClickAwayListener>
   )
