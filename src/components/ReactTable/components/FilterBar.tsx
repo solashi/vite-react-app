@@ -7,8 +7,8 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { Column } from 'react-table'
 
 export type FilterBarColumn = {
-  regex?: '_like' | '_equal' | '_between' | '_notEqual' | '_isnull' | 'has_'
-  query_key?: string
+  regex?: '_like' | '_equal' | '_between' | '_notEqual' | '_isnull' | 'has_' | 'none'
+  queryKey?: string
   searchType?: 'select' | 'text' | 'radio'
   additionSearchProps?: Partial<SelectProps<UnknownObj, UnknownObj> | InputProps<UnknownObj>>
   search?: boolean
@@ -48,9 +48,10 @@ function FilterBarComponent<T extends UnknownObj>({
       const params = Object.keys(values).reduce<UnknownObj>((_params, cur) => {
         if (values[cur]) {
           const searchObj = getSearchObj(cur)
-          const regex = searchObj?.regex || '_like'
-          const query_key = searchObj?.query_key || cur
-          _params[`${query_key}${regex}`] = values[cur]
+          const _regex = searchObj?.regex || '_like'
+          const regex = _regex === 'none' ? '' : _regex
+          const queryKey = searchObj?.queryKey || cur
+          _params[`${queryKey}${regex}`] = values[cur]
         }
         return _params
       }, {})

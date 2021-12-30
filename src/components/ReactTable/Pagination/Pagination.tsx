@@ -15,7 +15,7 @@ type PaginationProps<T extends object> = {
 
 function Pagination<T extends object>({
   instance,
-  type,
+  type = 'table',
   nPaginationProps
 }: PaginationProps<T>): ReactElement {
   const {
