@@ -23,7 +23,11 @@ function RawInputControl({
   ...props
 }: InputControlProps) {
   return (
-    <FormControl fullWidth={fullWidth} error={!!fieldError} {...props}>
+    <FormControl
+      fullWidth={fullWidth}
+      error={typeof fieldError === 'boolean' ? fieldError : !!fieldError?.message}
+      {...props}
+    >
       {label && (
         <FormLabel>
           {label}

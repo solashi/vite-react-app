@@ -1,16 +1,17 @@
 import { Provider } from 'jotai'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter } from 'react-router-dom'
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom'
+import { history } from 'routers'
 import App from './App'
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <HistoryRouter history={history}>
       <Provider>
         <App />
       </Provider>
-    </BrowserRouter>
+    </HistoryRouter>
   </React.StrictMode>,
   document.getElementById('root')
 )

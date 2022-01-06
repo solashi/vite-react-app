@@ -48,7 +48,8 @@ export type SelectProps<T extends UnknownObj, F> = BaseSelectProps<T, F> & Selec
 
 const defaultKey = ['name', 'id']
 
-function Select<T extends UnknownObj, F = UnknownObj>({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function Select<T extends UnknownObj, F = any>({
   name,
   control,
   defaultValue,

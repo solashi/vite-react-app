@@ -12,6 +12,7 @@ export interface FileBag {
   status: 'initial' | 'uploading' | 'uploaded' | 'failed'
   responseData: UnknownObj
   meta?: UnknownObj // any extra data forwarded from getUploadParams()
+  extraMeta?: UnknownObj // any extra meta map from onDrop
 }
 
 export interface UploadParams {
@@ -19,6 +20,7 @@ export interface UploadParams {
   method?: Method
   data?: UnknownObj
   meta?: UnknownObj // any extra data to forward to the FileBag.meta
+  field?: string
 }
 
 export interface FileUploaderProps extends UploadParams {
@@ -28,7 +30,7 @@ export interface FileUploaderProps extends UploadParams {
 }
 
 export interface FileUploader {
-  onDrop: (files: File[] | FileList) => void
+  onDrop: (files: File[] | FileList, extraMeta?: UnknownObj | UnknownObj[]) => void
   fileBags: FileBag[]
   retryUpload: (id: string) => void
   removeFileBag: (id: string) => void
@@ -39,6 +41,7 @@ function useUploader({
   getConfig,
   onUploaded,
   onFailed,
+  field,
   ...config
 }: FileUploaderProps): FileUploader {
   const [fileBags, setFileBags] = useState<FileBag[]>([])
@@ -60,7 +63,7 @@ function useUploader({
   const uploadFile = useCallback(
     async (file: File, id = new Date().getTime()) => {
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append(field || 'file', file)
 
       const defaultConfig = {
         onUploadProgress: async ({ total, loaded }: ProgressEvent) => {
@@ -96,7 +99,7 @@ function useUploader({
         const status: FileBag['status'] = 'failed'
         const updatedFileBag = updateFileBag(id, {
           status,
-          responseData: e && e.response && e.response.data
+          responseData: e
         })
         if (updatedFileBag && onFailed) {
           onFailed(updatedFileBag)
@@ -104,7 +107,7 @@ function useUploader({
         return updatedFileBag
       }
     },
-    [config, getConfig, onFailed, onUploaded, updateFileBag]
+    [config, field, getConfig, onFailed, onUploaded, updateFileBag]
   )
 
   const retryUpload = useCallback(
@@ -118,20 +121,22 @@ function useUploader({
   )
 
   const onDrop = useCallback(
-    (acceptedFiles) => {
+    (acceptedFiles, extraMeta = []) => {
       // return if null or undefined
       if (!acceptedFiles) {
         return
       }
       acceptedFiles = [...acceptedFiles] // converts to array if FileList
-      const arr: FileBag[] = acceptedFiles.map((file: File) => {
+      extraMeta = [extraMeta]
+      const arr: FileBag[] = acceptedFiles.map((file: File, index: number) => {
         const timeStamp = new Date().getTime()
         return {
           id: timeStamp + file.name,
           file,
           progress: 0,
           status: 'uploading',
-          formattedSize: formatFileSize(file.size)
+          formattedSize: formatFileSize(file.size),
+          extraMeta: extraMeta[index]
         } as FileBag
       })
       setFileBags([...fileBags, ...arr])
