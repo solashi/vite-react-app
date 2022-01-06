@@ -1,4 +1,4 @@
-import { Autocomplete, FormControlProps, InputAdornment, Stack } from '@mui/material'
+import { Autocomplete, FormControlProps, InputAdornment, Stack, Typography } from '@mui/material'
 import { Box, BoxProps } from '@mui/system'
 import { isValid } from 'date-fns'
 import { addZero, getDaysInMonth } from 'lib/utils'
@@ -27,7 +27,8 @@ function DatePickerSeparator<T>({
   label,
   helperText,
   containerProps,
-  splitString = '-'
+  splitString = '-',
+  required
 }: DatePickerSeparatorProps<T>) {
   const {
     field: { onChange, value },
@@ -80,7 +81,16 @@ function DatePickerSeparator<T>({
 
   return (
     <Box {...containerProps}>
-      {label && <FormLabel>{label}</FormLabel>}
+      {label && (
+        <FormLabel>
+          {label}
+          {required && (
+            <Typography ml={0.5} variant="caption" color="error.main">
+              必須
+            </Typography>
+          )}
+        </FormLabel>
+      )}
       <Stack direction="row" mt={0.5} spacing={1}>
         <Autocomplete
           options={yearOptions}

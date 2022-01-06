@@ -59,7 +59,7 @@ function InputTag<T>({
         {...props}
         onKeyDown={onKeyDown}
         startAdornment={
-          (value as string[]).length > 0 ? (
+          (value as string[])?.length > 0 ? (
             <InputAdornment position="end">
               {(value as string[]).map((tag: string) => (
                 <Tag label={tag} key={tag} onDelete={() => onDeleteTag(tag)} sx={{ mr: 1 }} />

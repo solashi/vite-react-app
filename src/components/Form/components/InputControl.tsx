@@ -1,4 +1,4 @@
-import { FormControl, FormControlProps } from '@mui/material'
+import { FormControl, FormControlProps, Typography } from '@mui/material'
 import { memo } from 'react'
 import { FieldError } from 'react-hook-form'
 import { FormHelper } from './FormHelper'
@@ -8,6 +8,7 @@ export type AddControlProps = {
   helperText?: string
   label?: string
   fieldError?: FieldError | boolean
+  required?: boolean
 }
 
 export type InputControlProps = FormControlProps<'div', AddControlProps>
@@ -18,11 +19,21 @@ function RawInputControl({
   label,
   helperText,
   children,
+  required,
   ...props
 }: InputControlProps) {
   return (
     <FormControl fullWidth={fullWidth} error={!!fieldError} {...props}>
-      {label && <FormLabel>{label}</FormLabel>}
+      {label && (
+        <FormLabel>
+          {label}
+          {required && (
+            <Typography ml={0.5} variant="caption" color="error.main">
+              必須
+            </Typography>
+          )}
+        </FormLabel>
+      )}
 
       {children}
 

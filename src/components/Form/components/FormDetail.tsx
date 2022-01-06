@@ -7,7 +7,7 @@ export type FormDetailProps = StackProps & {
 
 const FormDetail: React.FC<FormDetailProps> = ({ children, label, labelProps, ...props }) => {
   return (
-    <Stack {...props}>
+    <Stack alignItems="flex-start" {...props}>
       <Typography variant="h6" gutterBottom {...labelProps}>
         {label}
       </Typography>

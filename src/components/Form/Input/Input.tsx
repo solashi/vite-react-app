@@ -1,12 +1,14 @@
 import { FormControlProps, OutlinedInputProps } from '@mui/material'
 import { useController, UseControllerProps } from 'react-hook-form'
 import { AddControlProps, InputControl } from '..'
-import { InputStyled } from '../components/InputStyled'
+import { AdditionInputProps, InputStyled } from '../components/InputStyled'
 
 export type InputProps<T> = UseControllerProps<T> &
   OutlinedInputProps &
-  AddControlProps & {
+  AddControlProps &
+  AdditionInputProps & {
     controlProps?: FormControlProps
+    insideLabel?: string
   }
 
 function Input<T>({
@@ -17,6 +19,8 @@ function Input<T>({
   label,
   helperText,
   controlProps,
+  insideLabel,
+  required,
   ...props
 }: InputProps<T>) {
   const {
@@ -30,9 +34,10 @@ function Input<T>({
       fullWidth={fullWidth}
       label={label}
       helperText={helperText}
+      required={required}
       {...controlProps}
     >
-      <InputStyled {...inputProps} {...props} inputRef={ref} />
+      <InputStyled label={insideLabel} {...inputProps} {...props} inputRef={ref} />
     </InputControl>
   )
 }

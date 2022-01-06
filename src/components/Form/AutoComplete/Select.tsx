@@ -1,5 +1,8 @@
+import CloseIcon from '@mui/icons-material/Close'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import {
   Autocomplete,
+  AutocompleteProps,
   CircularProgress,
   FormControlProps,
   InputAdornment,
@@ -11,6 +14,7 @@ import { SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react
 import { useController, UseControllerProps } from 'react-hook-form'
 import { AddControlProps, InputControl, Tag } from '../components'
 import { InputStyled } from '../components/InputStyled'
+import { PopperComponent } from './PopperComponent'
 
 export type SelectOption = {
   label: string
@@ -34,13 +38,17 @@ export type BaseSelectProps<T, F> = UseControllerProps<F> &
     multiple?: boolean
     loading?: boolean
     labelValueKeys?: LabelValueType<T>
+    autocompleteProps?: Omit<
+      AutocompleteProps<SelectOption, boolean | undefined, undefined, undefined>,
+      'renderInput' | 'options'
+    >
   }
 
 export type SelectProps<T extends UnknownObj, F> = BaseSelectProps<T, F> & SelectQueryProps<T>
 
 const defaultKey = ['name', 'id']
 
-function Select<T extends UnknownObj, F = any>({
+function Select<T extends UnknownObj, F = UnknownObj>({
   name,
   control,
   defaultValue,
@@ -55,6 +63,7 @@ function Select<T extends UnknownObj, F = any>({
   queryFilter,
   addQueryFilter,
   labelValueKeys = defaultKey as LabelValueType<T>,
+  autocompleteProps,
   ...props
 }: SelectProps<T, F>) {
   const {
@@ -122,8 +131,10 @@ function Select<T extends UnknownObj, F = any>({
   }
 
   const handleChangeInputValue = (e: SyntheticEvent<Element, Event>, newValue: string) => {
-    // if (reason === 'reset') return
     setInputValue(newValue)
+    if (!newValue) {
+      onChange('')
+    }
   }
 
   return (
@@ -135,6 +146,11 @@ function Select<T extends UnknownObj, F = any>({
       {...controlProps}
     >
       <Autocomplete
+        {...autocompleteProps}
+        sx={{
+          minWidth: 150,
+          ...autocompleteProps?.sx
+        }}
         value={value}
         inputValue={inputValue}
         onChange={handleChangeValue}
@@ -143,6 +159,7 @@ function Select<T extends UnknownObj, F = any>({
         onBlur={onBlur}
         ref={ref}
         loading={loading || isLoading}
+        PopperComponent={(params) => <PopperComponent size={props?.size} {...params} />}
         disablePortal
         options={rawOptions || queryOptions}
         isOptionEqualToValue={(options, value) => options.value === value.value}
@@ -165,6 +182,8 @@ function Select<T extends UnknownObj, F = any>({
             <Tag label={option.label} {...getTagProps({ index })} key={index} />
           ))
         }
+        popupIcon={<KeyboardArrowDownIcon sx={{ fontSize: 16 }} />}
+        clearIcon={<CloseIcon sx={{ fontSize: 16 }} />}
       />
     </InputControl>
   )

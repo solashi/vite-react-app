@@ -6,13 +6,12 @@ import { Editor } from 'tinymce'
 import { AddControlProps, InputControl } from '..'
 import { apiKey, init } from './config'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type RichTextProps = UseControllerProps<any> &
+export type RichTextProps<T> = UseControllerProps<T> &
   AddControlProps & {
     controlProps?: FormControlProps
   } & IAllProps
 
-const RichText: React.VFC<RichTextProps> = ({
+function RichText<T>({
   name,
   control,
   defaultValue,
@@ -20,7 +19,7 @@ const RichText: React.VFC<RichTextProps> = ({
   helperText,
   controlProps,
   ...props
-}) => {
+}: RichTextProps<T>) {
   const {
     field: { onChange },
     fieldState: { error }
@@ -46,7 +45,7 @@ const RichText: React.VFC<RichTextProps> = ({
   return (
     <InputControl fieldError={error} label={label} helperText={helperText} {...controlProps}>
       <RichTextEditor
-        initialValue={defaultValue}
+        initialValue={defaultValue as string}
         apiKey={apiKey}
         onInit={(evt, editor) => (editorRef.current = editor)}
         init={init}
