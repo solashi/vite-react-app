@@ -12,7 +12,7 @@ const useAuth = () => {
   const setUser = useUpdateAtom(userAtom)
   const setFetching = useUpdateAtom(fetchAuthAtom)
 
-  const auth = !!user
+  const auth = !!(user && localStorage.getItem('user-token'))
 
   const login = async (args: UserLoginArgs) => {
     const res = await loginApi(args)

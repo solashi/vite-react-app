@@ -1,5 +1,4 @@
 import Axios, { AxiosRequestConfig } from 'axios'
-import { history } from 'routers'
 import { UserToken } from './types'
 
 const baseURL = import.meta.env.VITE_API_URL as string
@@ -10,7 +9,8 @@ export type RefreshTokenResponse = {
 }
 
 let isRefreshing = false
-const refreshSubscribers: ((token: string) => void)[] = []
+let refreshSubscribers: ((token: string) => void)[] = []
+let count = 0
 
 function subscribeTokenRefresh(cb: (token: string) => void) {
   refreshSubscribers.push(cb)
@@ -21,21 +21,16 @@ function onRefreshed(token: string) {
 }
 
 async function refreshToken(token: UserToken) {
-  try {
-    const res = await Axios.request<RefreshTokenResponse>({
-      method: 'POST',
-      url: 'auth/refresh-token',
-      baseURL,
-      data: {
-        refresh_token: token.refresh_token
-      }
-    })
+  const res = await Axios.request<RefreshTokenResponse>({
+    method: 'POST',
+    url: 'auth/refresh-token',
+    baseURL,
+    data: {
+      refresh_token: token.refresh_token
+    }
+  })
 
-    return res.data
-  } catch (error) {
-    localStorage.removeItem('user-token')
-    history.push('/login')
-  }
+  return res.data
 }
 
 function authRequestInterceptor(config: AxiosRequestConfig) {
@@ -65,18 +60,29 @@ request.interceptors.response.use(
 
     if (error.response && error.response.status === 401) {
       const _token = localStorage.getItem('user-token')
-      if (_token && !isRefreshing) {
+      if (_token && !isRefreshing && count < 1) {
+        count++
         isRefreshing = true
         const token = JSON.parse(_token) as UserToken
 
-        refreshToken(token).then((res) => {
-          isRefreshing = false
-
-          if (res?.access_token) {
-            localStorage.setItem('user-token', JSON.stringify(res))
-            onRefreshed(res?.access_token)
-          }
-        })
+        refreshToken(token)
+          .then((res) => {
+            if (res?.access_token) {
+              localStorage.setItem('user-token', JSON.stringify(res))
+              onRefreshed(res?.access_token)
+            }
+          })
+          .catch(() => {
+            localStorage.removeItem('user-token')
+            // push to login
+          })
+          .finally(() => {
+            count = 0
+            isRefreshing = false
+            refreshSubscribers = []
+          })
+      } else {
+        // push to login
       }
 
       const retryOrigReq = new Promise((resolve) => {
@@ -89,7 +95,9 @@ request.interceptors.response.use(
 
       return retryOrigReq
     }
-
+    if (error.response) {
+      error.response.data.httpStatus = error.response.status
+    }
     return Promise.reject(error.response.data)
   }
 )
