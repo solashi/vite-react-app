@@ -1,6 +1,7 @@
 import { Box, BoxProps, Button, Stack } from '@mui/material'
 import { Input, InputProps, Select, SelectProps } from 'components/Form'
 import { UnknownObj } from 'lib/types'
+import { snakeToCamel } from 'lib/utils'
 import debounce from 'lodash/debounce'
 import { memo, useCallback, useEffect, useMemo } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -23,6 +24,18 @@ export type FilterBarProps<T extends UnknownObj> = BoxProps<
   }
 >
 
+const convertRelationship = (accessor = '') => {
+  const arr = accessor.split('.')
+  return [snakeToCamel(arr[0]), arr[1]].join(':')
+}
+
+const convertParamKey = (accessor = ''): string => {
+  // Replace all array key
+  const _accessor = accessor.replace(/\[[^\]]*\]/g, '')
+  const name = _accessor.includes('.') ? convertRelationship(_accessor) : accessor
+  return name
+}
+
 function FilterBarComponent<T extends UnknownObj>({
   handleChangeParams,
   searchColumns,
@@ -31,14 +44,14 @@ function FilterBarComponent<T extends UnknownObj>({
 }: FilterBarProps<T>) {
   const { control, handleSubmit, watch } = useForm<UnknownObj>({
     defaultValues: searchColumns.reduce((df, cur) => {
-      ;(df as UnknownObj)[cur['accessor'] as string] = ''
+      ;(df as UnknownObj)[convertParamKey(cur['accessor'] as string)] = ''
       return df
     }, {})
   })
 
   const getSearchObj = useCallback(
     (key: string) => {
-      return searchColumns.find((el) => el.accessor === key)
+      return searchColumns.find((el) => convertParamKey(el.accessor as string) === key)
     },
     [searchColumns]
   )
@@ -97,9 +110,10 @@ function FilterBarComponent<T extends UnknownObj>({
     >
       <Stack direction="row" alignItems="center" spacing={2}>
         {searchColumns.map(
-          ({ accessor, Header, searchType, additionSearchProps, search = true }, index) => {
+          ({ accessor = '', Header, searchType, additionSearchProps, search = true }, index) => {
+            const name = convertParamKey(accessor as string)
             const controlProps = {
-              name: accessor as string,
+              name: name,
               label: Header as string,
               control,
               key: index

@@ -18,3 +18,8 @@ export const formatFileSize = (sizeInBytes: number) => {
 }
 
 export const addZero = (num: number) => ('0' + num).slice(-2)
+
+export const snakeToCamel = (str: string) =>
+  str
+    .toLowerCase()
+    .replace(/([-_][a-z])/g, (group) => group.toUpperCase().replace('-', '').replace('_', ''))
