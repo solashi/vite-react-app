@@ -15,12 +15,18 @@ import {
 } from '@mui/material'
 import { SxProps } from '@mui/system'
 import { TableSkeleton, TableSkeletonType } from 'components/Skeleton'
-import { ReactElement, useEffect } from 'react'
-import { CellProps, Row as RowProps, TableOptions, useTable } from 'react-table'
+import { forwardRef, ReactElement, useEffect, useImperativeHandle } from 'react'
+import { CellProps, Row as RowProps, TableInstance, TableOptions, useTable } from 'react-table'
 import { Cell, Row, SortLabel } from './components'
 import EmptyTable from './EmptyTable'
 import { Pagination } from './Pagination'
 import { actionHook, hooks, selectionHook } from './tableHooks'
+
+declare module 'react' {
+  function forwardRef<T, P = Record<string, unknown>>(
+    render: (props: P, ref: React.Ref<T>) => React.ReactElement | null
+  ): (props: P & React.RefAttributes<T>) => React.ReactElement | null
+}
 
 export type PaginationMeta = {
   page: number
@@ -32,6 +38,7 @@ export type ActionColumnConfig = {
   deleteText?: string
   needConfirm?: boolean
   deleteConfirmText?: string
+  showText?: string
 }
 
 interface TableProperties<T extends object> extends TableOptions<T> {
@@ -53,9 +60,14 @@ interface TableProperties<T extends object> extends TableOptions<T> {
   nPaginationProps?: PaginationProps
   nPaginationContainerProps?: StackProps
   tableContainerProps?: TableContainerProps
+  disabledRowClick?: boolean
+  id?: string
 }
 
-function ReactTable<T extends object>(props: TableProperties<T>): ReactElement {
+function ReactTableWithRef<T extends object>(
+  props: TableProperties<T>,
+  ref: React.ForwardedRef<TableInstance<T>>
+): ReactElement {
   const {
     columns,
     data,
@@ -76,6 +88,8 @@ function ReactTable<T extends object>(props: TableProperties<T>): ReactElement {
     nPaginationProps,
     nPaginationContainerProps,
     tableContainerProps,
+    disabledRowClick,
+    id: tableId,
     ...useTableOptions
   } = props
 
@@ -94,6 +108,8 @@ function ReactTable<T extends object>(props: TableProperties<T>): ReactElement {
     actionHook({ actionConfig, onActionEdit, onActionDelete, defaultActionEdit })
   )
 
+  useImperativeHandle(ref, () => instance, [instance])
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -103,7 +119,7 @@ function ReactTable<T extends object>(props: TableProperties<T>): ReactElement {
     state: { pageIndex, pageSize }
   } = instance
 
-  const hasRowClick = typeof onRowClick === 'function'
+  const hasRowClick = typeof onRowClick === 'function' && !disabledRowClick
 
   useEffect(() => {
     if (typeof handleChangePagination === 'function') {
@@ -122,7 +138,7 @@ function ReactTable<T extends object>(props: TableProperties<T>): ReactElement {
   return (
     <ClickAwayListener onClickAway={onClickAway}>
       <TableContainer component={Paper} sx={sx} {...tableContainerProps}>
-        <Table {...tableProps} {...getTableProps()}>
+        <Table id={tableId} {...tableProps} {...getTableProps()}>
           <TableHead>
             {headerGroups.map((headerGroup) => {
               const { key, ...headerGroupProps } = headerGroup.getHeaderGroupProps()
@@ -206,4 +222,7 @@ function ReactTable<T extends object>(props: TableProperties<T>): ReactElement {
     </ClickAwayListener>
   )
 }
+
+const ReactTable = forwardRef(ReactTableWithRef)
+
 export { ReactTable }
