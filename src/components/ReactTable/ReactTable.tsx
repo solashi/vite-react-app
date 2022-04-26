@@ -1,4 +1,5 @@
 import {
+  Box,
   ClickAwayListener,
   PaginationProps,
   Paper,
@@ -15,7 +16,8 @@ import {
 } from '@mui/material'
 import { SxProps } from '@mui/system'
 import { TableSkeleton, TableSkeletonType } from 'components/Skeleton'
-import { forwardRef, ReactElement, useEffect, useImperativeHandle } from 'react'
+import { UnknownObj } from 'lib/types'
+import { forwardRef, ReactElement, useEffect, useImperativeHandle, useMemo } from 'react'
 import { CellProps, Row as RowProps, TableInstance, TableOptions, useTable } from 'react-table'
 import { Cell, Row, SortLabel } from './components'
 import EmptyTable from './EmptyTable'
@@ -39,6 +41,7 @@ export type ActionColumnConfig = {
   needConfirm?: boolean
   deleteConfirmText?: string
   showText?: string
+  columnWidth?: number
 }
 
 interface TableProperties<T extends object> extends TableOptions<T> {
@@ -62,6 +65,8 @@ interface TableProperties<T extends object> extends TableOptions<T> {
   tableContainerProps?: TableContainerProps
   disabledRowClick?: boolean
   id?: string
+  additionState?: UnknownObj
+  meta?: PaginationMeta
 }
 
 function ReactTableWithRef<T extends object>(
@@ -90,6 +95,9 @@ function ReactTableWithRef<T extends object>(
     tableContainerProps,
     disabledRowClick,
     id: tableId,
+    initialState,
+    additionState,
+    meta: paginationMeta,
     ...useTableOptions
   } = props
 
@@ -97,10 +105,18 @@ function ReactTableWithRef<T extends object>(
     {
       columns,
       data,
-      initialState: { pageSize: 10 },
+      initialState: { pageSize: 10, ...initialState },
       manualPagination: true,
       autoResetPage: false,
       pageCount,
+      useControlledState: (state) =>
+        useMemo(
+          () => ({
+            ...state,
+            ...additionState
+          }),
+          [state]
+        ),
       ...useTableOptions
     },
     ...hooks,
@@ -116,7 +132,9 @@ function ReactTableWithRef<T extends object>(
     headerGroups,
     rows,
     prepareRow,
-    state: { pageIndex, pageSize }
+    state: { pageIndex, pageSize },
+    gotoPage,
+    setPageSize
   } = instance
 
   const hasRowClick = typeof onRowClick === 'function' && !disabledRowClick
@@ -126,6 +144,17 @@ function ReactTableWithRef<T extends object>(
       handleChangePagination({ page: pageIndex + 1, per_page: pageSize })
     }
   }, [handleChangePagination, pageIndex, pageSize])
+
+  useEffect(() => {
+    if (
+      paginationMeta &&
+      (paginationMeta.page !== pageIndex + 1 || paginationMeta?.per_page !== pageSize)
+    ) {
+      gotoPage(paginationMeta.page - 1)
+      setPageSize(paginationMeta.per_page)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gotoPage, paginationMeta, setPageSize])
 
   if (loading && !data.length) {
     return <TableSkeleton {...skeletonConfig} />
@@ -160,7 +189,11 @@ function ReactTableWithRef<T extends object>(
                           active={column.isSorted}
                           // react-table has a unsorted state which is not treated here
                           direction={column.isSortedDesc ? 'desc' : 'asc'}
-                          hideSortIcon={column.id === '_selector' || column.id === '__action'}
+                          hideSortIcon={
+                            column.id === '_selector' ||
+                            column.id === '__action' ||
+                            column.id === '__temp'
+                          }
                         >
                           <Stack direction="row" alignItems="center">
                             {column.render('Header')}
@@ -189,9 +222,23 @@ function ReactTableWithRef<T extends object>(
                 >
                   {row.cells.map((cell) => {
                     const { key, ...getCellProps } = cell.getCellProps()
+                    const { customWidth, clipText = true } = cell.column
+
                     return (
-                      <Cell variant="body" key={key} {...getCellProps}>
-                        {cell.render('Cell')}
+                      <Cell variant="body" key={key} width={customWidth} {...getCellProps}>
+                        <Box
+                          sx={{
+                            width: customWidth,
+                            ...(clipText && {
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              display: 'block'
+                            })
+                          }}
+                        >
+                          {cell.render('Cell')}
+                        </Box>
                       </Cell>
                     )
                   })}

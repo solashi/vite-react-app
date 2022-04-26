@@ -103,7 +103,10 @@ declare module 'react-table' {
       UseGroupByColumnOptions<D>,
       UseResizeColumnsColumnOptions<D>,
       UseSortByColumnOptions<D>,
-      FilterBarColumn {}
+      FilterBarColumn {
+    customWidth?: number
+    clipText?: boolean
+  }
 
   export interface ColumnInstance<D extends Record<string, unknown> = Record<string, unknown>>
     extends UseFiltersColumnProps<D>,
